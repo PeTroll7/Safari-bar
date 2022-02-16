@@ -71,16 +71,14 @@ export class GameComponent implements OnInit {
     document.getElementById('game-plan')?.classList.add('hide');
   }
 
-  but1() {
-    console.log((this.hand1 = this.hand1));
-    console.log(this.hand1.length);
-    /*this.gameArray = this.clicked(
+  /*but1() {
+    this.gameArray = this.clicked(
       this.hand1[0],
       0,
       this.gameArray,
       this.bar,
       this.trash
-    );*/
+    );
   }
   but2() {
     this.gameArray = this.clicked(
@@ -108,7 +106,7 @@ export class GameComponent implements OnInit {
       this.bar,
       this.trash
     );
-  }
+  }*/
 
   //////////////////////////////////////////////////////
   clicked(
@@ -268,9 +266,49 @@ export class GameComponent implements OnInit {
     shuffle(this.hand4);
     console.log(this.hand1[0]);
 
-    this.button1?.addEventListener('click', this.but1);
-    this.button2?.addEventListener('click', this.but2);
-    this.button3?.addEventListener('click', this.but3);
-    this.button4?.addEventListener('click', this.but4);
+    this.button1?.addEventListener(
+      'click',
+      () =>
+        (this.gameArray = this.clicked(
+          this.hand1[0],
+          0,
+          this.gameArray,
+          this.bar,
+          this.trash
+        ))
+    );
+    this.button2?.addEventListener(
+      'click',
+      () =>
+        (this.gameArray = this.clicked(
+          this.hand1[1],
+          1,
+          this.gameArray,
+          this.bar,
+          this.trash
+        ))
+    );
+    this.button3?.addEventListener(
+      'click',
+      () =>
+        (this.gameArray = this.clicked(
+          this.hand1[2],
+          2,
+          this.gameArray,
+          this.bar,
+          this.trash
+        ))
+    );
+    this.button4?.addEventListener(
+      'click',
+      () =>
+        (this.gameArray = this.clicked(
+          this.hand1[3],
+          3,
+          this.gameArray,
+          this.bar,
+          this.trash
+        ))
+    );
   }
 }
