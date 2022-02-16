@@ -1,0 +1,25 @@
+.menu,
+.plan {
+  text-align: center;
+}
+.hide {
+  display: none;
+}
+
+.game-plan {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.game-plan-div {
+  height: 50px;
+  width: 50px;
+  border: red 1px solid;
+  text-align: center;
+}
+
+.game-plan-div-card {
+  padding-top: 15px;
+}

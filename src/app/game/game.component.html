@@ -1,0 +1,75 @@
+<head>
+  <meta charset="utf-8" />
+  <title>safari-bar</title>
+  <!--<link rel="stylesheet" href="style.css" />-->
+</head>
+<body>
+  <div id="start-menu" class="menu">
+    <div class="title">Piškvorky</div>
+    <div class="players">
+      <form id="players">
+        <div>
+          Hráč 1
+          <input id="player1" type="text" class="player-input player1" /><br />
+          Hráč 2
+          <input id="player2" type="text" class="player-input player2" /><br />
+        </div>
+      </form>
+
+      <button (click)="start()" class="button-start" id="start-button">
+        START
+      </button>
+    </div>
+  </div>
+
+  <div id="game-plan" class="hide plan">
+    <button (click)="end()" class="button-start" id="start-button">START</button
+    ><br />
+
+    <input
+      type="button"
+      id="button-1"
+      value="{{ hand1[0]?.id ? hand1[0].id : 'out' }}"
+      [disabled]="hand1[0] == undefined"
+    />
+    <input
+      type="button"
+      id="button-2"
+      value="{{ hand1[1]?.id ? hand1[1].id : 'out' }}"
+      [disabled]="hand1[1] == undefined"
+    />
+    <input
+      type="button"
+      id="button-3"
+      value="{{ hand1[2]?.id ? hand1[2].id : 'out' }}"
+      [disabled]="hand1[2] == undefined"
+    />
+    <input
+      type="button"
+      id="button-4"
+      value="{{ hand1[3]?.id ? hand1[3].id : 'out' }}"
+      [disabled]="hand1[3] == undefined"
+    /><br />
+
+    <div class="game-plan">
+      <div class="game-plan-div">
+        <div id="1" class="game-plan-div-card">{{ gameArray[0] }}</div>
+      </div>
+      <div class="game-plan-div">
+        <div id="2" class="game-plan-div-card">{{ gameArray[1] }}</div>
+      </div>
+      <div class="game-plan-div">
+        <div id="3" class="game-plan-div-card">{{ gameArray[2] }}</div>
+      </div>
+      <div class="game-plan-div">
+        <div id="4" class="game-plan-div-card">{{ gameArray[3] }}</div>
+      </div>
+      <div class="game-plan-div">
+        <div id="5" class="game-plan-div-card">{{ gameArray[4] }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!--<script src="../functions/animals.ts"></script>
+    <!--<script src="zvirata-hand.js"></script>-->
+</body>
