@@ -29,43 +29,43 @@
     <input
       type="button"
       id="button-1"
-      value="{{ hand1[0]?.id ? hand1[0].id : 'out' }}"
+      value="{{ hand1[0]?.name ? hand1[0].name : 'out' }}"
       [disabled]="hand1[0] == undefined"
     />
     <input
       type="button"
       id="button-2"
-      value="{{ hand1[1]?.id ? hand1[1].id : 'out' }}"
+      value="{{ hand1[1]?.name ? hand1[1].name : 'out' }}"
       [disabled]="hand1[1] == undefined"
     />
     <input
       type="button"
       id="button-3"
-      value="{{ hand1[2]?.id ? hand1[2].id : 'out' }}"
+      value="{{ hand1[2]?.name ? hand1[2].name : 'out' }}"
       [disabled]="hand1[2] == undefined"
     />
     <input
       type="button"
       id="button-4"
-      value="{{ hand1[3]?.id ? hand1[3].id : 'out' }}"
+      value="{{ hand1[3]?.name ? hand1[3].name : 'out' }}"
       [disabled]="hand1[3] == undefined"
     /><br />
 
     <div class="game-plan">
       <div class="game-plan-div">
-        <div id="1" class="game-plan-div-card">{{ gameArray[0] }}</div>
+        <div id="div1" class="game-plan-div-card"></div>
       </div>
       <div class="game-plan-div">
-        <div id="2" class="game-plan-div-card">{{ gameArray[1] }}</div>
+        <div id="div2" class="game-plan-div-card"></div>
       </div>
       <div class="game-plan-div">
-        <div id="3" class="game-plan-div-card">{{ gameArray[2] }}</div>
+        <div id="div3" class="game-plan-div-card"></div>
       </div>
       <div class="game-plan-div">
-        <div id="4" class="game-plan-div-card">{{ gameArray[3] }}</div>
+        <div id="div4" class="game-plan-div-card"></div>
       </div>
       <div class="game-plan-div">
-        <div id="5" class="game-plan-div-card">{{ gameArray[4] }}</div>
+        <div id="div5" class="game-plan-div-card"></div>
       </div>
     </div>
   </div>

@@ -1,3 +1,4 @@
+import { sequenceEqual, timeout } from 'rxjs';
 import { Card } from '../game/game.component';
 import {
   vyhodnoceniTahu,
@@ -6,53 +7,61 @@ import {
   toggleButtonsOn,*/
 } from './game-functions';
 
-export function skunk(gameArray: Card[], playedCard: Card): Card[] {
+export function skunk(
+  gameArray: Card[],
+  playedCard: Card,
+  setting: boolean
+): Card[] {
   let array = gameArray.map((x) => {
     return x.id;
   });
+
   for (let i = 0; i < 2; i++) {
     let max = Math.max(...array);
     if (max == 1 || max === playedCard.id) continue;
     while (array.includes(max)) {
-      gameArray.splice(array.indexOf(max));
-      array.splice(array.indexOf(max));
+      gameArray.splice(array.indexOf(max), 1);
+      array.splice(array.indexOf(max), 1);
     }
   }
 
-  gameArray.push(playedCard);
+  if (setting) gameArray.push(playedCard);
 
   return gameArray;
 }
 
-export function papousekFirst(gameArray: Card[], playedCard: Card) {
+export function papousekFirst(
+  gameArray: Card[],
+  playedCard: Card,
+  setting: boolean
+) {
   if (gameArray.length == 0) {
     gameArray.push(playedCard);
-    return gameArray;
+    return { gameArray: gameArray, isNeed: false };
   }
 
-  //toggleButtonsOff();
-
-  gameArray.push(playedCard);
-  return gameArray;
+  if (setting) gameArray.push(playedCard);
+  return { gameArray: gameArray, isNeed: true };
 }
 
-export function papousekSecond(gameArray: Card[], cardIndex: number) {
+export function papousekSecond(cardIndex: number, gameArray: Card[]) {
   gameArray.splice(cardIndex, 1);
 
-  /*vyhodnoceniTahu(-1, null);
-  toggleButtonsOn();*/
+  return gameArray;
 }
 
-export function klokanFirst(gameArray: Card[], playedCard: Card) {
+export function klokanFirst(
+  gameArray: Card[],
+  playedCard: Card,
+  setting: boolean
+) {
   if (gameArray.length == 0) {
     gameArray.push(playedCard);
-    return gameArray;
+    return { gameArray: gameArray, isNeed: false };
   }
 
-  //toggleButtonsOff();
-
-  gameArray.push(playedCard);
-  return gameArray;
+  if (setting) gameArray.push(playedCard);
+  return { gameArray: gameArray, isNeed: true };
 }
 
 export function klokanSecond(
@@ -62,18 +71,16 @@ export function klokanSecond(
 ) {
   let tempArray = gameArray.slice(0, cardIndex);
   tempArray.push(playedCard);
-  gameArray = tempArray.concat(gameArray.slice(cardIndex, 4));
+  gameArray = tempArray.concat(
+    gameArray.slice(cardIndex, gameArray.length - 1)
+  );
 
-  if (gameArray.length == 5) {
-    //vyhodnot();
-  }
-
-  /*vyhodnoceniTahu(-1, null);
-
-  toggleButtonsOn();*/
+  return gameArray;
 }
 
-export function opice(gameArray: Card[], playedCard: Card) {
+export function opice(gameArray: Card[], playedCard: Card, setting: boolean) {
+  if (!setting) gameArray.splice(gameArray.length - 1, 1);
+
   let size = gameArray.length;
 
   if (obshuje4(size, gameArray)) {
@@ -99,107 +106,105 @@ export function opice(gameArray: Card[], playedCard: Card) {
   }
 }
 
-export function chameleonFirst(gameArray: Card[], playedCard: Card) {
+export function chameleonFirst(
+  gameArray: Card[],
+  playedCard: Card,
+  setting: boolean
+) {
   if (gameArray.length == 0) {
     gameArray.push(playedCard);
-    return gameArray;
+    return { gameArray: gameArray, isNeed: false };
   }
-  //toggleButtonsOff();
 
-  gameArray.push(playedCard);
-  return gameArray;
+  if (setting) gameArray.push(playedCard);
+  return { gameArray: gameArray, isNeed: true };
 }
 
-export function chameleonSecond(cardIndex: number, gameArray: Card[]) {
-  /*let pozice;
-  switch (gameArray[cardIndex].id) {
+export function chameleonSecond(
+  cardIndex: number,
+  gameArray: Card[],
+  playedCard: Card
+) {
+  let currentCard = gameArray[cardIndex];
+  let chameleonCard = 0;
+
+  switch (currentCard.id) {
     case 1: {
-      pozice = skunk();
-      index++;
+      gameArray = skunk(gameArray, playedCard, false);
       break;
     }
     case 2: {
       chameleonCard = 2;
-      pozice = papousekFirst();
-
+      let temp = papousekFirst(gameArray, playedCard, false);
+      gameArray = temp.gameArray;
       break;
     }
     case 3: {
       chameleonCard = 3;
-      pozice = klokanFirst();
+      let temp = klokanFirst(gameArray, playedCard, false);
+      gameArray = temp.gameArray;
 
-      index++;
       break;
     }
     case 4: {
-      pozice = opice();
-      index++;
+      gameArray = opice(gameArray, playedCard, false);
+
       break;
     }
     case 5: {
       chameleonCard = 5;
-      pozice = chameleonFirst();
+      let temp = chameleonFirst(gameArray, playedCard, false);
+      gameArray = temp.gameArray;
 
-      index++;
       break;
     }
     case 6: {
-      pozice = tulen();
-      index++;
+      gameArray = tulen(gameArray, playedCard, false);
+
       break;
     }
     case 7: {
-      pozice = zebra();
-      index++;
+      //nic
       break;
     }
     case 8: {
-      pozice = zirafa();
-      index++;
+      //nic
       break;
     }
     case 9: {
-      pozice = had();
-      index++;
+      gameArray = had(gameArray, playedCard, false);
+
       break;
     }
     case 10: {
-      pozice = krokodyl();
-      index++;
+      gameArray = krokodyl(gameArray, playedCard, false);
+
       break;
     }
     case 11: {
-      pozice = hroch();
-      index++;
+      gameArray = hroch(gameArray, playedCard, false);
+
       break;
     }
     case 12: {
-      pozice = lev();
-      if (pozice == null) pole[index] = null;
-      else index++;
+      gameArray = lev(gameArray, playedCard, false);
+
       break;
     }
   }
 
-  if (index == 5) {
-    vyhodnot();
-  }
-
-  vyhodnoceniTahu(-1, null);
-
-  if (
-    !(
-      pole[cardIndex]?.id == 2 ||
-      pole[cardIndex]?.id == 3 ||
-      pole[cardIndex]?.id == 5
-    )
-  ) {
-    toggleButtonsOn();
-  }*/
+  if (currentCard.id == 2 || currentCard.id == 3 || currentCard.id == 5)
+    return { gameArray: gameArray, chameleonCard: chameleonCard, isNeed: true };
+  else
+    return {
+      gameArray: gameArray,
+      chameleonCard: chameleonCard,
+      isNeed: false,
+    };
 }
 
-export function tulen(gameArray: Card[], playedCard: Card) {
-  gameArray.push(playedCard);
+export function tulen(gameArray: Card[], playedCard: Card, setting: boolean) {
+  if (setting) gameArray.push(playedCard);
   gameArray.reverse();
 
   return gameArray;
@@ -215,33 +220,43 @@ export function zirafa(gameArray: Card[], playedCard: Card) {
   return gameArray;
 }
 
-export function had(gameArray: Card[], playedCard: Card) {
-  gameArray.push(playedCard);
-  gameArray.sort((a, b) => (a?.id > b?.id ? -1 : 1));
-
+export function had(gameArray: Card[], playedCard: Card, setting: boolean) {
+  if (setting) {
+    gameArray.push(playedCard);
+    gameArray.sort((a, b) => (a?.id > b?.id ? -1 : 1));
+  } else {
+    gameArray[gameArray.length - 1].id = 9;
+    gameArray.sort((a, b) => (a?.id > b?.id ? -1 : 1));
+    let array = gameArray.map((x) => {
+      return x.name;
+    });
+    gameArray[array.findIndex((x) => x === 'chameleon')].id = 5;
+  }
   return gameArray;
 }
 
-export function krokodyl(gameArray: Card[], playedCard: Card) {
-  let pozice = gameArray.length;
+export function krokodyl(
+  gameArray: Card[],
+  playedCard: Card,
+  setting: boolean
+) {
+  let p = setting ? gameArray.length - 1 : gameArray.length - 2;
 
-  for (let i = pozice - 1; i >= 0; i--) {
-    if (gameArray[i].id < 10 && gameArray[i].id != 7) {
-      gameArray.splice(i, 1);
+  for (p; p >= 0; p--) {
+    if (gameArray[p].id < 10 && gameArray[p].id != 7) {
+      gameArray.splice(p, 1);
     } else break;
   }
 
-  gameArray.push(playedCard);
+  if (setting) gameArray.push(playedCard);
   return gameArray;
 }
 
-export function hroch(gameArray: Card[], playedCard: Card) {
-  if (gameArray.length == 0) {
-    gameArray.push(playedCard);
-    return gameArray;
-  }
+export function hroch(gameArray: Card[], playedCard: Card, setting: boolean) {
+  if (!setting) gameArray.splice(gameArray.length - 1, 1);
 
   let p = gameArray.length - 1;
+
   for (p; p >= 0; p--) {
     if (gameArray[p].id >= 11 || gameArray[p].id == 7) {
       p++;
@@ -255,11 +270,12 @@ export function hroch(gameArray: Card[], playedCard: Card) {
   let tempArray2 = gameArray.slice(p, 4);
 
   gameArray = tempArray1.concat(tempArray2);
-
   return gameArray;
 }
 
-export function lev(gameArray: Card[], playedCard: Card) {
+export function lev(gameArray: Card[], playedCard: Card, setting: boolean) {
+  if (!setting) gameArray.splice(gameArray.length - 1, 1);
+
   if (gameArray.findIndex((x) => x.id == 12) != -1) return gameArray;
   gameArray = gameArray.filter((x) => x.id != 4);
   let temp_pole = [playedCard];

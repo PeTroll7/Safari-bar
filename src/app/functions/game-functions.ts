@@ -24,6 +24,139 @@ export function obshuje4(size: number, gameArray: Card[]) {
   return false;
 }
 
+export function vyhodnot(gameArray: Card[], bar: Card[], trash: Card[]) {
+  bar.push(gameArray[0]);
+  bar.push(gameArray[1]);
+  trash.push(gameArray[4]);
+
+  gameArray = [gameArray[2], gameArray[3]];
+
+  return [gameArray, bar, trash];
+}
+
+export function div1Func(
+  gameArray: Card[],
+  playedCard: Card,
+  chameleonCard: number
+) {
+  let temp = {
+    gameArray: gameArray,
+    chameleonCard: 0,
+    isNeed: true,
+  };
+  if (playedCard?.id === 2 || chameleonCard === 2) {
+    gameArray = animals.papousekSecond(0, gameArray);
+    chameleonCard = 0;
+  } else if (
+    (playedCard?.id == 3 && gameArray.length <= 3) ||
+    (chameleonCard === 3 && gameArray.length <= 3)
+  ) {
+    console.log(2);
+    gameArray = animals.klokanSecond(0, gameArray, playedCard!);
+    chameleonCard = 0;
+  } else if (playedCard?.id == 5 && chameleonCard != 3) {
+    temp = animals.chameleonSecond(0, gameArray, playedCard);
+    if (temp.isNeed) {
+    } else {
+      gameArray = temp.gameArray;
+    }
+  }
+  return { gameArray: gameArray, chameleonCard: temp.chameleonCard };
+}
+
+////////////////////////////////////////////////////////////////////
+
+export function div2Func(
+  gameArray: Card[],
+  playedCard: Card,
+  chameleonCard: number
+) {
+  let temp = {
+    gameArray: gameArray,
+    chameleonCard: 0,
+    isNeed: true,
+  };
+  if (playedCard?.id === 2 || chameleonCard === 2) {
+    gameArray = animals.papousekSecond(1, gameArray);
+    chameleonCard = 0;
+  } else if (
+    (playedCard?.id == 3 && gameArray.length <= 4) ||
+    (chameleonCard === 3 && gameArray.length <= 4)
+  ) {
+    console.log(2);
+    gameArray = animals.klokanSecond(1, gameArray, playedCard!);
+    chameleonCard = 0;
+  } else if (playedCard?.id == 5 && chameleonCard != 3) {
+    temp = animals.chameleonSecond(1, gameArray, playedCard);
+    if (temp.isNeed) {
+    } else {
+      gameArray = temp.gameArray;
+    }
+  }
+  return { gameArray: gameArray, chameleonCard: temp.chameleonCard };
+}
+
+////////////////////////////////////////////////////////////////////
+
+export function div3Func(
+  gameArray: Card[],
+  playedCard: Card,
+  chameleonCard: number
+) {
+  let temp = {
+    gameArray: gameArray,
+    chameleonCard: 0,
+    isNeed: true,
+  };
+  if (playedCard?.id === 2 || chameleonCard === 2) {
+    gameArray = animals.papousekSecond(2, gameArray);
+    chameleonCard = 0;
+  } else if (
+    (playedCard?.id == 3 && gameArray.length <= 5) ||
+    (chameleonCard === 3 && gameArray.length <= 5)
+  ) {
+    console.log(2);
+    gameArray = animals.klokanSecond(2, gameArray, playedCard!);
+    chameleonCard = 0;
+  } else if (playedCard?.id == 5 && chameleonCard != 3) {
+    temp = animals.chameleonSecond(2, gameArray, playedCard);
+    if (temp.isNeed) {
+    } else {
+      gameArray = temp.gameArray;
+    }
+  }
+  return { gameArray: gameArray, chameleonCard: temp.chameleonCard };
+}
+
+////////////////////////////////////////////////////////////////////
+
+export function div4Func(
+  gameArray: Card[],
+  playedCard: Card,
+  chameleonCard: number
+) {
+  let temp = {
+    gameArray: gameArray,
+    chameleonCard: 0,
+    isNeed: true,
+  };
+  if (playedCard?.id === 2 || chameleonCard === 2) {
+    gameArray = animals.papousekSecond(3, gameArray);
+    chameleonCard = 0;
+  } else if (playedCard?.id == 3 || chameleonCard === 3) {
+    console.log(2);
+    gameArray = animals.klokanSecond(3, gameArray, playedCard!);
+    chameleonCard = 0;
+  } else if (playedCard?.id == 5 && chameleonCard != 3) {
+    temp = animals.chameleonSecond(3, gameArray, playedCard);
+    if (temp.isNeed) {
+    } else {
+      gameArray = temp.gameArray;
+    }
+  }
+  return { gameArray: gameArray, chameleonCard: temp.chameleonCard };
+}
+
 /*export function toggleButtonsOff(
   b1: HTMLElement,
   b2: HTMLElement,
@@ -221,16 +354,6 @@ export function div4Func(
   }
 }*/
 
-export function vyhodnot(gameArray: Card[], bar: Card[], trash: Card[]) {
-  bar.push(gameArray[0]);
-  bar.push(gameArray[1]);
-  trash.push(gameArray[4]);
-
-  gameArray = [gameArray[2], gameArray[3]];
-
-  return [gameArray, bar, trash];
-}
-
 export function vyhodnoceniTahu(
   setting: number,
   gameArray: Card[],
@@ -298,7 +421,7 @@ export function vyhodnoceniTahu(
 //-----------------------------------------------------------CLICKED----------------------------------------------
 //◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘
 
-export function clicked(
+/*export function clicked(
   card: Card,
   //arrayId: number,
   gameArray: Card[],
@@ -410,4 +533,4 @@ export function clicked(
   }
   //vyhodnoceniTahu(0, arrayId);
   //return gameArray;
-}
+}*/
