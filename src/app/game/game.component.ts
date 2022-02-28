@@ -114,9 +114,6 @@ export class GameComponent implements OnInit {
         } else {
           gameArray = temp.gameArray;
         }
-        /*if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-        }*/
 
         break;
       }
@@ -128,10 +125,6 @@ export class GameComponent implements OnInit {
         } else {
           gameArray = temp.gameArray;
         }
-
-        /*if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-        }*/
 
         break;
       }
@@ -148,12 +141,13 @@ export class GameComponent implements OnInit {
 
         if (temp.isNeed) {
           this.toggleButtonsOff();
+        } else if (gameArray.length == 5) {
+          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
+          this.moveDone = true;
         } else {
           gameArray = temp.gameArray;
+          this.moveDone = true;
         }
-        /*if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-        }*/
 
         break;
       }
@@ -412,7 +406,6 @@ export class GameComponent implements OnInit {
         }
       }
     }
-    //console.log(gameArray);
     return gameArray;
   }
 
@@ -480,8 +473,6 @@ export class GameComponent implements OnInit {
       new Card(4, '4 opice', 1),
       new Card(5, '5 chameleon', 1),
       new Card(6, '6 tulen', 1),
-      new Card(7, '7 zebra', 1),
-      new Card(7, '7 zebra', 1),
       new Card(7, '7 zebra', 1),
       new Card(8, '8 zirafa', 1),
       new Card(9, '9 had', 1),

@@ -1,21 +1,29 @@
 import { Card } from '../game/game.component';
-import { obshuje4 } from './game-functions';
+import { obshuje4, containsOnlyCham } from './game-functions';
 
 export function skunk(
   gameArray: Card[],
   playedCard: Card,
   setting: boolean
 ): Card[] {
-  let array = gameArray.map((x) => {
-    return x.id;
-  });
+  if (gameArray.length != 0) {
+    let array = gameArray.map((x) => {
+      return x.id;
+    });
 
-  for (let i = 0; i < 2; i++) {
-    let max = Math.max(...array);
-    if (max == 1 || max === playedCard.id) continue;
-    while (array.includes(max)) {
-      gameArray.splice(array.indexOf(max), 1);
-      array.splice(array.indexOf(max), 1);
+    for (let i = 0; i < 2; i++) {
+      let max = Math.max(...array);
+
+      if (max == 1) continue;
+
+      while (
+        array.includes(max) &&
+        gameArray[array.indexOf(max)] !== playedCard
+      ) {
+        let index = array.indexOf(max);
+        gameArray.splice(index, 1);
+        array.splice(index, 1);
+      }
     }
   }
 
@@ -105,7 +113,7 @@ export function chameleonFirst(
   playedCard: Card,
   setting: boolean
 ) {
-  if (gameArray.length == 0) {
+  if (gameArray.length == 0 || containsOnlyCham(gameArray)) {
     gameArray.push(playedCard);
     return { gameArray: gameArray, isNeed: false };
   }

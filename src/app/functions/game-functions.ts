@@ -24,6 +24,13 @@ export function obshuje4(size: number, gameArray: Card[]) {
   return false;
 }
 
+export function containsOnlyCham(gameArray: Card[]): boolean {
+  for (let i = 0; i < gameArray.length; i++) {
+    if (gameArray[i].id != 5) return false;
+  }
+  return true;
+}
+
 export function vyhodnot(gameArray: Card[], bar: Card[], trash: Card[]) {
   bar.push(gameArray[0]);
   bar.push(gameArray[1]);
