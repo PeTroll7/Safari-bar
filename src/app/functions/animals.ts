@@ -1,11 +1,5 @@
-import { sequenceEqual, timeout } from 'rxjs';
 import { Card } from '../game/game.component';
-import {
-  vyhodnoceniTahu,
-  obshuje4,
-  /*toggleButtonsOff,
-  toggleButtonsOn,*/
-} from './game-functions';
+import { obshuje4 } from './game-functions';
 
 export function skunk(
   gameArray: Card[],
@@ -164,11 +158,11 @@ export function chameleonSecond(
       break;
     }
     case 7: {
-      //nic
+      //zebra při položení nic neudělá
       break;
     }
     case 8: {
-      //nic
+      //žirafa při položení nic neudělá
       break;
     }
     case 9: {
@@ -177,12 +171,12 @@ export function chameleonSecond(
       break;
     }
     case 10: {
-      gameArray = krokodyl(gameArray, playedCard, false);
+      gameArray = krokodyl(gameArray, playedCard, false, gameArray.length - 2);
 
       break;
     }
     case 11: {
-      gameArray = hroch(gameArray, playedCard, false);
+      gameArray = hroch(gameArray, playedCard, false, gameArray.length - 1);
 
       break;
     }
@@ -228,9 +222,13 @@ export function had(gameArray: Card[], playedCard: Card, setting: boolean) {
     gameArray[gameArray.length - 1].id = 9;
     gameArray.sort((a, b) => (a?.id > b?.id ? -1 : 1));
     let array = gameArray.map((x) => {
-      return x.name;
+      return { name: x.name, id: x.id };
     });
-    gameArray[array.findIndex((x) => x === 'chameleon')].id = 5;
+    gameArray[
+      array.findIndex(
+        (x) => x.name === playedCard.name && x.id === playedCard.id
+      )
+    ].id = 5;
   }
   return gameArray;
 }
@@ -238,10 +236,9 @@ export function had(gameArray: Card[], playedCard: Card, setting: boolean) {
 export function krokodyl(
   gameArray: Card[],
   playedCard: Card,
-  setting: boolean
+  setting: boolean,
+  p: number
 ) {
-  let p = setting ? gameArray.length - 1 : gameArray.length - 2;
-
   for (p; p >= 0; p--) {
     if (gameArray[p].id < 10 && gameArray[p].id != 7) {
       gameArray.splice(p, 1);
@@ -252,24 +249,32 @@ export function krokodyl(
   return gameArray;
 }
 
-export function hroch(gameArray: Card[], playedCard: Card, setting: boolean) {
-  if (!setting) gameArray.splice(gameArray.length - 1, 1);
-
-  let p = gameArray.length - 1;
+export function hroch(
+  gameArray: Card[],
+  playedCard: Card,
+  setting: boolean,
+  p: number
+) {
+  if (!setting) {
+    gameArray.splice(p, 1);
+    p--;
+  }
 
   for (p; p >= 0; p--) {
     if (gameArray[p].id >= 11 || gameArray[p].id == 7) {
       p++;
       break;
     }
-    if (p == 0) break;
   }
+  if (p < 0) p++;
+
   let tempArray1 = gameArray.slice(0, p);
   tempArray1.push(playedCard);
 
   let tempArray2 = gameArray.slice(p, 4);
 
   gameArray = tempArray1.concat(tempArray2);
+
   return gameArray;
 }
 

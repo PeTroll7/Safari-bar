@@ -1,37 +1,6 @@
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-////////////////PAPOUSEK,KLOKAN,CHAMELEON, KDYŽ SE UMÍSTÍ/////////////////////////
-////////////////JAKO PÁTÁ KARTA, TAK SE PROVEDE VYHODNOT//////////////////////////
-///////////////////////////TO BY SE DÍT NEMĚLO////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
 import { Component, OnInit } from '@angular/core';
 import * as animals from '../functions/animals';
-import {
-  vyhodnot,
-  shuffle,
-  div1Func,
-  div2Func,
-  div3Func,
-  div4Func,
-} from '../functions/game-functions';
+import { vyhodnot, shuffle, divFunc } from '../functions/game-functions';
 
 export class Card {
   public id: number;
@@ -77,6 +46,8 @@ export class GameComponent implements OnInit {
 
   div: (HTMLElement | undefined)[] = [];
 
+  moveDone: boolean = true;
+
   start() {
     document.getElementById('start-menu')?.classList.add('hide');
     document.getElementById('game-plan')?.classList.remove('hide');
@@ -85,7 +56,9 @@ export class GameComponent implements OnInit {
   end() {
     /*document.getElementById('start-menu')?.classList.remove('hide');
     document.getElementById('game-plan')?.classList.add('hide');*/
+    console.log('BAR');
     console.log(this.bar);
+    console.log('TRASH');
     console.log(this.trash);
     let b1 = 0;
     let b2 = 0;
@@ -122,6 +95,7 @@ export class GameComponent implements OnInit {
     bar: Card[],
     trash: Card[]
   ) {
+    this.moveDone = false;
     this.playedCard = card;
     switch (this.playedCard.id) {
       case 1: {
@@ -216,7 +190,12 @@ export class GameComponent implements OnInit {
         break;
       }
       case 10: {
-        gameArray = animals.krokodyl(gameArray, this.playedCard, true);
+        gameArray = animals.krokodyl(
+          gameArray,
+          this.playedCard,
+          true,
+          gameArray.length - 1
+        );
 
         if (gameArray.length == 5) {
           [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
@@ -224,7 +203,12 @@ export class GameComponent implements OnInit {
         break;
       }
       case 11: {
-        gameArray = animals.hroch(gameArray, this.playedCard, true);
+        gameArray = animals.hroch(
+          gameArray,
+          this.playedCard,
+          true,
+          gameArray.length - 1
+        );
 
         if (gameArray.length == 5) {
           [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
@@ -244,6 +228,13 @@ export class GameComponent implements OnInit {
       }
     }
 
+    if (
+      this.playedCard.id == 2 ||
+      this.playedCard.id == 3 ||
+      this.playedCard.id == 5
+    ) {
+    } else this.moveDone = true;
+
     this.hand1.splice(arrayId, 1);
     return gameArray;
   }
@@ -260,7 +251,7 @@ export class GameComponent implements OnInit {
       this.bar,
       this.trash
     );
-    this.vyhodnoceniTahu();
+    this.vyhodnoceniTahu(true);
   };
   but2 = () => {
     this.gameArray = this.clicked(
@@ -270,7 +261,7 @@ export class GameComponent implements OnInit {
       this.bar,
       this.trash
     );
-    this.vyhodnoceniTahu();
+    this.vyhodnoceniTahu(true);
   };
   but3 = () => {
     this.gameArray = this.clicked(
@@ -280,7 +271,7 @@ export class GameComponent implements OnInit {
       this.bar,
       this.trash
     );
-    this.vyhodnoceniTahu();
+    this.vyhodnoceniTahu(true);
   };
   but4 = () => {
     this.gameArray = this.clicked(
@@ -290,56 +281,139 @@ export class GameComponent implements OnInit {
       this.bar,
       this.trash
     );
-    this.vyhodnoceniTahu();
+    this.vyhodnoceniTahu(true);
   };
+
+  /////////////////////////////////////////
+  ///////////FUNKCE HERNÍHO POLE///////////
+  /////////////////////////////////////////
+
   d1 = () => {
-    let temp = div1Func(this.gameArray, this.playedCard!, this.chameleonCard!);
+    let temp = divFunc(
+      this.gameArray,
+      this.playedCard!,
+      this.chameleonCard!,
+      0
+    );
     this.dFunc(temp);
   };
   d2 = () => {
-    let temp = div2Func(this.gameArray, this.playedCard!, this.chameleonCard!);
+    let temp = divFunc(
+      this.gameArray,
+      this.playedCard!,
+      this.chameleonCard!,
+      1
+    );
     this.dFunc(temp);
   };
   d3 = () => {
-    let temp = div3Func(this.gameArray, this.playedCard!, this.chameleonCard!);
+    let temp = divFunc(
+      this.gameArray,
+      this.playedCard!,
+      this.chameleonCard!,
+      2
+    );
     this.dFunc(temp);
   };
   d4 = () => {
-    let temp = div4Func(this.gameArray, this.playedCard!, this.chameleonCard!);
+    let temp = divFunc(
+      this.gameArray,
+      this.playedCard!,
+      this.chameleonCard!,
+      3
+    );
     this.dFunc(temp);
   };
 
-  dFunc(temp: { gameArray: Card[]; chameleonCard: number }) {
-    this.gameArray = temp.gameArray;
-    this.vyhodnoceniTahu();
-    if (temp.chameleonCard == 0) {
-      this.chameleonCard = 0;
-      this.toggleButtonsOn();
-    } else this.chameleonCard = temp.chameleonCard;
-    if (this.gameArray.length == 5) {
-      [this.gameArray, this.bar, this.trash] = vyhodnot(
-        this.gameArray,
-        this.bar,
-        this.trash
-      );
-      this.vyhodnoceniTahu();
-      console.log(this.bar);
-      console.log(this.trash);
+  dFunc(temp: { gameArray: Card[]; chameleonCard: number; valid: boolean }) {
+    if (temp.valid) {
+      if (temp.chameleonCard == 0) {
+        this.chameleonCard = 0;
+        this.toggleButtonsOn();
+      } else this.chameleonCard = temp.chameleonCard;
+
+      this.gameArray = temp.gameArray;
+      this.vyhodnoceniTahu(false);
+
+      if (this.gameArray.length == 5 && this.moveDone) {
+        [this.gameArray, this.bar, this.trash] = vyhodnot(
+          this.gameArray,
+          this.bar,
+          this.trash
+        );
+        this.vyhodnoceniTahu(true);
+      }
     }
   }
   /////////////////////////////////////////
   ////////////ZBYLÉ FUNKCE THIS////////////
   /////////////////////////////////////////
-  vyhodnoceniTahu() {
+  vyhodnoceniTahu(end: boolean) {
+    if (this.moveDone) {
+      this.gameArray = this.repeatCards(this.gameArray);
+    }
+
     this.div1!.textContent = this.gameArray[0]?.id.toString();
     this.div2!.textContent = this.gameArray[1]?.id.toString();
     this.div3!.textContent = this.gameArray[2]?.id.toString();
     this.div4!.textContent = this.gameArray[3]?.id.toString();
     this.div5!.textContent = this.gameArray[4]?.id.toString();
 
-    if (this.hand1.length == 0 && this.chameleonCard == 0) {
+    if (
+      this.hand1.length == 0 &&
+      this.chameleonCard == 0 &&
+      this.moveDone &&
+      end
+    ) {
       this.end();
     }
+  }
+
+  repeatCards(gameArray: Card[]) {
+    if (gameArray.length > 1) {
+      let zirafaKrok = false;
+      for (let i = gameArray.length - 1; i >= 1; i--) {
+        if (this.playedCard !== gameArray[i]) {
+          switch (gameArray[i].id) {
+            case 8: {
+              if (
+                this.playedCard! !== gameArray[i] &&
+                !zirafaKrok &&
+                gameArray[i - 1]?.id < gameArray[i]?.id
+              ) {
+                let temp = gameArray[i - 1];
+                gameArray[i - 1] = gameArray[i];
+                gameArray[i] = temp;
+                zirafaKrok = true;
+                console.log('zirafa přeskočila');
+              }
+              break;
+            }
+            case 10: {
+              let size = gameArray.length;
+              gameArray = animals.krokodyl(
+                gameArray,
+                this.playedCard!,
+                false,
+                i - 1
+              );
+              i = i - (size - gameArray.length);
+              console.log('krokodýl sežral');
+              break;
+            }
+            case 11: {
+              gameArray = animals.hroch(gameArray, gameArray[i], false, i);
+              console.log('hroch předběhl');
+              break;
+            }
+            default: {
+            }
+          }
+        }
+      }
+    }
+    //console.log(gameArray);
+    return gameArray;
   }
 
   toggleButtonsOff() {
@@ -372,6 +446,7 @@ export class GameComponent implements OnInit {
         break;
       }
     }
+    console.log('vyber kartu z hrácího pole');
   }
 
   toggleButtonsOn() {
@@ -384,6 +459,15 @@ export class GameComponent implements OnInit {
     this.button2?.addEventListener('click', this.but2);
     this.button3?.addEventListener('click', this.but3);
     this.button4?.addEventListener('click', this.but4);
+
+    this.moveDone = true;
+    console.log('pokračuj v normálním hraní');
+  }
+
+  zobraz() {
+    console.log(this.gameArray);
+    console.log(this.bar);
+    console.log(this.trash);
   }
 
   //////////////////////////////////////////////////////
@@ -397,9 +481,11 @@ export class GameComponent implements OnInit {
       new Card(5, '5 chameleon', 1),
       new Card(6, '6 tulen', 1),
       new Card(7, '7 zebra', 1),
+      new Card(7, '7 zebra', 1),
+      new Card(7, '7 zebra', 1),
       new Card(8, '8 zirafa', 1),
       new Card(9, '9 had', 1),
-      new Card(10, '10 krokodyl', 1),
+      new Card(10, '10 krokodyl', 2),
       new Card(11, '11 hroch', 1),
       new Card(12, '12 lev', 1),
       new Card(1, '1 skunk', 2),
@@ -426,8 +512,6 @@ export class GameComponent implements OnInit {
     this.button2 = document.getElementById('button-2')!;
     this.button3 = document.getElementById('button-3')!;
     this.button4 = document.getElementById('button-4')!;
-
-    this.div.push(this.div1, this.div2, this.div3, this.div4, this.div5);
 
     shuffle(this.hand1);
     shuffle(this.hand2);
