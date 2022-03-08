@@ -13,7 +13,7 @@ export class SocketIoService {
   constructor() {}
 
   connect() {
-    this.socket = io(environment.SOCKET_ENDPORT);
+    this.socket = io('https://safri-bar-server.herokuapp.com');
   }
 
   connectToRoom(gameID: string) {
