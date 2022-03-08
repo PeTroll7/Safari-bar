@@ -1,25 +1,220 @@
+::ng-deep .mat-menu-panel {
+  min-height: 0px !important;
+  max-width: 1000px !important;
+}
+
+body {
+  height: 100%;
+}
+
+.waiting-body {
+  text-align: center;
+  height: 100%;
+}
+.title {
+  font-size: 100px;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0 15px;
+}
+
+.defaultText {
+  font-size: 50px;
+  font-weight: bold;
+}
+
 .menu,
 .plan {
   text-align: center;
 }
 .hide {
-  display: none;
+  display: none !important;
 }
 
 .game-plan {
-  padding-top: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  padding: 20px 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .game-plan-div {
-  height: 50px;
-  width: 50px;
-  border: red 1px solid;
+  border: white 0.5vw solid;
   text-align: center;
+  height: 20vw;
+  width: 13vw;
 }
 
-.game-plan-div-card {
-  padding-top: 15px;
+.img {
+  height: 20vw;
+}
+.body {
+  height: 100%;
+}
+
+.clickable {
+  border: green 0.5vw solid !important;
+  &:hover {
+    border: red 0.5vw solid !important;
+  }
+}
+
+.gameInfo {
+  top: 0;
+  text-align: center;
+  width: 100%;
+  z-index: 90;
+  padding-top: 1.6vw;
+  font-size: 50px;
+  font-weight: bold;
+  position: absolute;
+}
+
+.hand-card {
+  height: 10vw;
+  border-radius: 6%;
+}
+
+.hand-card-hover:hover {
+  transform: scale(2) translateY(-10%);
+  transition: transform 0.5s;
+}
+
+.chat {
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+}
+
+.x {
+  height: 25vw;
+
+  .chat-content {
+    height: 24vw;
+    max-height: 24vw;
+    padding: 0 10px;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    .chat-content-padding {
+      height: 100%;
+      padding-bottom: 10px;
+
+      .message-other {
+        float: left;
+        border-radius: 30px;
+        clear: both;
+        font-size: 5;
+        margin-bottom: 2px;
+        padding-bottom: 5px;
+        max-width: 85%;
+        overflow-wrap: break-word;
+        padding: 10px 15px;
+        position: relative;
+      }
+
+      .player1 {
+        background: #b22919;
+      }
+      .player2 {
+        background: #69b4db; // rgb(0, 110, 255);
+      }
+      .player3 {
+        background: #4d8723; // rgb(60, 255, 0);
+      }
+      .player4 {
+        background: #fde51b; // rgb(238, 238, 238);
+      }
+
+      /*.message-me {
+        float: right;
+        //background-color: blue;
+
+        //background: #0084ff;
+        background: #ff0000;*/
+
+      .message-me {
+        float: right;
+        //background-color: blue;
+
+        //background: #0084ff;
+        //background: #b22919;
+        color: #fff;
+        border-radius: 30px;
+        clear: both;
+        font-size: 5;
+        margin-bottom: 2px;
+        padding-bottom: 5px;
+        max-width: 85%;
+        overflow-wrap: break-word;
+        padding: 10px 15px;
+        position: relative;
+      }
+    }
+  }
+}
+
+.log-menu {
+  height: 40vw;
+
+  .log-content {
+    height: 39vw;
+    max-height: 39vw;
+    width: 30vw;
+    padding: 0 10px;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    .log-img {
+      height: 100px;
+    }
+  }
+}
+
+.chat-menu {
+  padding: 0 10px;
+
+  input {
+    font-size: inherit;
+    padding: 0;
+    margin: 0 5px 0 0;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    width: 1000px;
+  }
+}
+
+/*.chat-input {
+  height: 34px;
+}
+
+.chat-send {
+  height: 40px;
+}*/
+
+.log {
+  left: 0 !important;
+  bottom: 0 !important;
+  position: absolute !important;
+  width: 50px;
+  height: 50px;
+}
+
+.test {
+  height: 40px !important;
+}
+
+.send {
+  cursor: pointer;
+}
+
+.rules {
+  left: 0 !important;
+  top: 0 !important;
+  position: absolute !important;
+  z-index: 99;
+  cursor: pointer;
 }

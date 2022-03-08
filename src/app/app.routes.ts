@@ -6,7 +6,7 @@ import { MenuComponent } from './menu/menu.component';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: MenuComponent },
-  { path: 'game', component: GameComponent },
+  { path: 'game/:id', component: GameComponent },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
 

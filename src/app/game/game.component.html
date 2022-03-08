@@ -1,79 +1,229 @@
-<head>
-  <meta charset="utf-8" />
-  <title>safari-bar</title>
-  <!--<link rel="stylesheet" href="style.css" />-->
-</head>
-<body>
-  <div id="start-menu" class="menu">
-    <div class="title">Piškvorky</div>
-    <div class="players">
-      <form id="players">
-        <div>
-          Hráč 1
-          <input id="player1" type="text" class="player-input player1" /><br />
-          Hráč 2
-          <input id="player2" type="text" class="player-input player2" /><br />
-        </div>
-      </form>
+<div class="waiting-body body" id="waiting">
+  <div class="title">čekání na další hráče</div>
+  <div
+    fxLayout="column"
+    fxLayoutAlign="space-around center"
+    class="defaultText"
+  >
+    <div class="defaultText">hra lze zapnout i s méně hráči</div>
 
-      <button (click)="start()" class="button-start" id="start-button">
-        START
-      </button>
+    {{ countOfPlayers }} / 4
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="startGame()"
+      *ngIf="myID == 1"
+    >
+      START GAME
+    </button>
+  </div>
+</div>
+
+<div fxLayout="column" fxLayoutAlign="space-around" class="body hide" id="game">
+  <div class="game-plan" fxLayout="row" fxLayoutAlign="space-around center">
+    <div class="game-plan-div">
+      <div id="bar">
+        <img class="img" src="../../assets/imgs/bar.png" />
+      </div>
+    </div>
+    <div class="game-plan-div" id="div1">
+      <img
+        class="img"
+        src="../../assets/imgs/{{
+          gameArray[0]?.name ? gameArray[0]?.name : 'blank'
+        }}{{ gameArray[0]?.player }}.png"
+      />
+      <!--<img class="img" src="../../assets/imgs/skunk.png" />-->
+      <!--{{ gameArray[0]?.id }}--><!--<img src="../../assets/imgs/test{{ gameArray[0]?.id }}.webp" />-->
+    </div>
+    <div class="game-plan-div" id="div2">
+      <img
+        class="img"
+        src="../../assets/imgs/{{
+          gameArray[1]?.name ? gameArray[1]?.name : 'blank'
+        }}{{ gameArray[1]?.player }}.png"
+      />
+    </div>
+    <div class="game-plan-div" id="div3">
+      <img
+        class="img"
+        src="../../assets/imgs/{{
+          gameArray[2]?.name ? gameArray[2]?.name : 'blank'
+        }}{{ gameArray[2]?.player }}.png"
+      />
+    </div>
+    <div class="game-plan-div" id="div4">
+      <img
+        class="img"
+        src="../../assets/imgs/{{
+          gameArray[3]?.name ? gameArray[3]?.name : 'blank'
+        }}{{ gameArray[3]?.player }}.png"
+      />
+    </div>
+    <div class="game-plan-div" id="div5">
+      <img
+        class="img"
+        src="../../assets/imgs/{{
+          gameArray[4]?.name ? gameArray[4]?.name : 'blank'
+        }}{{ gameArray[4]?.player }}.png"
+      />
+    </div>
+    <div class="game-plan-div">
+      <div id="trash">
+        <img class="img" src="../../assets/imgs/trash.png" />
+      </div>
     </div>
   </div>
 
-  <div id="game-plan" class="hide plan">
-    <button (click)="end()" class="button-start" id="start-button">START</button
-    ><br />
+  <!--<button (click)="zobraz()" class="button-start" id="start-button">
+        ZOBRAZ POLE / BAR / TRASH
+      </button>-->
 
+  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center">
+    <img
+      id="button-1"
+      class="hand-card"
+      [ngClass]="hand[0] ? 'hand-card-hover' : ''"
+      src="../../assets/imgs/{{ hand[0]?.name ? hand[0].name : 'back' }}{{
+        hand[0]?.player
+      }}.png"
+    />
+    <img
+      id="button-2"
+      class="hand-card"
+      [ngClass]="hand[1] ? 'hand-card-hover' : ''"
+      src="../../assets/imgs/{{ hand[1]?.name ? hand[1].name : 'back' }}{{
+        hand[1]?.player
+      }}.png"
+    />
+    <img
+      id="button-3"
+      class="hand-card"
+      [ngClass]="hand[2] ? 'hand-card-hover' : ''"
+      src="../../assets/imgs/{{ hand[2]?.name ? hand[2].name : 'back' }}{{
+        hand[2]?.player
+      }}.png"
+    />
+    <img
+      id="button-4"
+      class="hand-card"
+      [ngClass]="hand[3] ? 'hand-card-hover' : ''"
+      src="../../assets/imgs/{{ hand[3]?.name ? hand[3].name : 'back' }}{{
+        hand[3]?.player
+      }}.png"
+    />
+  </div>
+  <!--<div fxLayout="row" fxLayoutAlign="center">
     <input
       type="button"
       id="button-1"
-      value="{{ hand1[0]?.name ? hand1[0].name : 'out' }}"
-      [disabled]="hand1[0] == undefined"
+      value="{{ hand[0]?.name ? hand[0].name : 'out' }}"
+      [disabled]="hand[0] == undefined"
     />
     <input
       type="button"
       id="button-2"
-      value="{{ hand1[1]?.name ? hand1[1].name : 'out' }}"
-      [disabled]="hand1[1] == undefined"
+      value="{{ hand[1]?.name ? hand[1].name : 'out' }}"
+      [disabled]="hand[1] == undefined"
     />
     <input
       type="button"
       id="button-3"
-      value="{{ hand1[2]?.name ? hand1[2].name : 'out' }}"
-      [disabled]="hand1[2] == undefined"
+      value="{{ hand[2]?.name ? hand[2].name : 'out' }}"
+      [disabled]="hand[2] == undefined"
     />
     <input
       type="button"
       id="button-4"
-      value="{{ hand1[3]?.name ? hand1[3].name : 'out' }}"
-      [disabled]="hand1[3] == undefined"
-    /><br />
+      value="{{ hand[3]?.name ? hand[3].name : 'out' }}"
+      [disabled]="hand[3] == undefined"
+    />
+  </div>-->
 
-    <div class="game-plan">
-      <div class="game-plan-div">
-        <div id="div1" class="game-plan-div-card"></div>
-      </div>
-      <div class="game-plan-div">
-        <div id="div2" class="game-plan-div-card"></div>
-      </div>
-      <div class="game-plan-div">
-        <div id="div3" class="game-plan-div-card"></div>
-      </div>
-      <div class="game-plan-div">
-        <div id="div4" class="game-plan-div-card"></div>
-      </div>
-      <div class="game-plan-div">
-        <div id="div5" class="game-plan-div-card"></div>
-      </div>
-    </div>
-    <br />
-    <button (click)="zobraz()" class="button-start" id="start-button">
-      ZOBRAZ POLE / BAR / TRASH
-    </button>
+  <div class="gameInfo">
+    {{ gameInfo }}
   </div>
 
-  <!--<script src="../functions/animals.ts"></script>
-    <!--<script src="zvirata-hand.js"></script>-->
-</body>
+  <button
+    mat-raised-button
+    color="primary"
+    [matMenuTriggerFor]="chatMenu"
+    class="chat"
+    (click)="chatScrollDown()"
+  >
+    <i class="fa fa-2x fa-solid fa-comments"></i>
+  </button>
+  <mat-menu #chatMenu="matMenu" yPosition="above" class="scroll">
+    <div class="x">
+      <mat-card id="chat" class="chat-content">
+        <div class="chat-content-padding">
+          <div *ngFor="let message of chatArray">
+            <div
+              [ngClass]="[
+                message.user == myID ? 'message-me' : 'message-other',
+                message.user == 1
+                  ? 'player1'
+                  : message.user == 2
+                  ? 'player2'
+                  : message.user == 3
+                  ? 'player3'
+                  : 'player4'
+              ]"
+            >
+              {{ message.text }}
+            </div>
+            <br />
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div fxLayout="row" class="chat-menu">
+      <input
+        type="text"
+        (click)="$event.stopPropagation()"
+        [(ngModel)]="message"
+        class="chat-input"
+      />
+      <div
+        class="send"
+        (click)="sendMessage()"
+        (click)="$event.stopPropagation()"
+      >
+        <i class="fa fa-2x fa-solid fa-arrow-circle-right"></i>
+      </div>
+    </div>
+  </mat-menu>
+
+  <button
+    mat-raised-button
+    color="primary"
+    [matMenuTriggerFor]="logMenu"
+    class="log"
+    (click)="logScrollDown()"
+  >
+    <i class="fa fa-2x fa-solid fa-clock"></i>
+  </button>
+
+  <mat-menu #logMenu="matMenu" yPosition="above" class="scroll"
+    ><div class="log-menu">
+      <mat-card id="log" class="log-content">
+        <div *ngFor="let log of logArray; let i = index">
+          <div *ngIf="i % 2 == 0; else imgGameArray">
+            {{ log }}
+          </div>
+          <ng-template #imgGameArray>
+            <img class="log-img" [src]="getCard(log, 0)" />
+            <img class="log-img" [src]="getCard(log, 1)" />
+            <img class="log-img" [src]="getCard(log, 2)" />
+            <img class="log-img" [src]="getCard(log, 3)" />
+            <img class="log-img" [src]="getCard(log, 4)" />
+          </ng-template>
+        </div>
+      </mat-card>
+    </div>
+  </mat-menu>
+
+  <div class="rules" (click)="openRulesDialog()">
+    <i class="fa fa-2x fa-solid fa-question-circle"></i>
+  </div>
+</div>
