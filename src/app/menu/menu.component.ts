@@ -29,6 +29,12 @@ export class MenuComponent implements OnInit {
     };
     this.socketIoService.connect();
     this.canIConnect();
+
+    document.getElementById('idInput')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.createGame();
+      }
+    });
   }
 
   canIConnect() {

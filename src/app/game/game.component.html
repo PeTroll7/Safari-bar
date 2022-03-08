@@ -154,7 +154,7 @@
     <i class="fa fa-2x fa-solid fa-comments"></i>
   </button>
   <mat-menu #chatMenu="matMenu" yPosition="above" class="scroll">
-    <div class="x">
+    <div class="chat-main">
       <mat-card id="chat" class="chat-content">
         <div class="chat-content-padding">
           <div *ngFor="let message of chatArray">
@@ -183,6 +183,8 @@
         (click)="$event.stopPropagation()"
         [(ngModel)]="message"
         class="chat-input"
+        id="chatInput"
+        autocomplete="off"
       />
       <div
         class="send"

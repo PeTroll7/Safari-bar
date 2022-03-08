@@ -346,6 +346,11 @@ export class GameComponent implements OnInit {
   chatScrollDown() {
     document.getElementById('chat')!.scrollTop =
       document.getElementById('chat')!.scrollHeight;
+    document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.sendMessage();
+      }
+    });
   }
 
   dFunc(temp: {
@@ -403,8 +408,7 @@ export class GameComponent implements OnInit {
   repeatCards(gameArray: Card[]) {
     if (gameArray.length > 1) {
       let zirafaJump = false;
-      let animalMoved = false;
-      for (let i = gameArray.length - 1; i >= 1; i--) {
+      for (let i = 0; i < gameArray.length; i++) {
         let lastArray = gameArray;
         if (this.playedCard !== gameArray[i]) {
           switch (gameArray[i].id) {
@@ -435,10 +439,6 @@ export class GameComponent implements OnInit {
                 i = i - (size - gameArray.length);
                 this.logArray.push('krokodýl sežral slabší zvířata před sebou');
                 this.logArray.push(gameArray);
-                if (animalMoved) {
-                  this.repeatCards(gameArray);
-                  animalMoved = false;
-                } else animalMoved = true;
               }
 
               break;
@@ -448,10 +448,6 @@ export class GameComponent implements OnInit {
               if (gameArray[i] != lastArray[i]) {
                 this.logArray.push('hroch předběhl slabší zvířata před sebou');
                 this.logArray.push(gameArray);
-                if (animalMoved) {
-                  this.repeatCards(gameArray);
-                  animalMoved = false;
-                } else animalMoved = true;
               }
 
               break;
@@ -488,8 +484,11 @@ export class GameComponent implements OnInit {
         this.div1?.addEventListener('click', this.d1);
         this.div2?.addEventListener('click', this.d2);
         this.div3?.addEventListener('click', this.d3);
-        if (this.playedCard!.id != 3 || this.chameleonCard != 3)
+        if (this.playedCard!.id != 3 || this.chameleonCard != 3) {
           this.div1?.classList.add('clickable');
+          console.log('ano' + '1');
+        }
+
         this.div2?.classList.add('clickable');
         this.div3?.classList.add('clickable');
         break;
@@ -502,6 +501,7 @@ export class GameComponent implements OnInit {
         if (this.playedCard!.id != 3 || this.chameleonCard != 3) {
           this.div1?.classList.add('clickable');
           this.div2?.classList.add('clickable');
+          console.log('ano' + '2');
         }
         this.div3?.classList.add('clickable');
         this.div4?.classList.add('clickable');
