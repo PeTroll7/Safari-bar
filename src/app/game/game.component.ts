@@ -435,9 +435,10 @@ export class GameComponent implements OnInit {
                 i = i - (size - gameArray.length);
                 this.logArray.push('krokodýl sežral slabší zvířata před sebou');
                 this.logArray.push(gameArray);
-                animalMoved
-                  ? this.repeatCards(gameArray)
-                  : (animalMoved = true);
+                if (animalMoved) {
+                  this.repeatCards(gameArray);
+                  animalMoved = false;
+                } else animalMoved = true;
               }
 
               break;
@@ -447,9 +448,10 @@ export class GameComponent implements OnInit {
               if (gameArray[i] != lastArray[i]) {
                 this.logArray.push('hroch předběhl slabší zvířata před sebou');
                 this.logArray.push(gameArray);
-                animalMoved
-                  ? this.repeatCards(gameArray)
-                  : (animalMoved = true);
+                if (animalMoved) {
+                  this.repeatCards(gameArray);
+                  animalMoved = false;
+                } else animalMoved = true;
               }
 
               break;
