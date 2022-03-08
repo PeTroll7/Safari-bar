@@ -1,3 +1,25 @@
-.head-title {
+.title {
+  font-size: 100px;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0 15px;
+}
+
+.defaultText {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.input {
+  background-color: white;
+}
+
+.loading {
+  padding-top: 15%;
   text-align: center;
+  height: 100%;
+  width: 100%;
+  font-size: 200px;
+  font-weight: bold;
 }

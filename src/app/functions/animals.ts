@@ -7,6 +7,9 @@ export function skunk(
   setting: boolean
 ): Card[] {
   if (gameArray.length != 0) {
+    if (playedCard.id == 5) {
+      gameArray = gameArray.slice(0, gameArray.length - 1);
+    }
     let array = gameArray.map((x) => {
       return x.id;
     });
@@ -16,15 +19,13 @@ export function skunk(
 
       if (max == 1) continue;
 
-      while (
-        array.includes(max) &&
-        gameArray[array.indexOf(max)] !== playedCard
-      ) {
+      while (array.includes(max)) {
         let index = array.indexOf(max);
         gameArray.splice(index, 1);
         array.splice(index, 1);
       }
     }
+    if (playedCard.id == 5) gameArray.push(playedCard);
   }
 
   if (setting) gameArray.push(playedCard);
@@ -130,15 +131,21 @@ export function chameleonSecond(
   let currentCard = gameArray[cardIndex];
   let chameleonCard = 0;
 
+  let logMessage = '';
+
   switch (currentCard.id) {
     case 1: {
       gameArray = skunk(gameArray, playedCard, false);
+
+      logMessage = 'chameleon na sebe vzal podobu skunka';
       break;
     }
     case 2: {
       chameleonCard = 2;
       let temp = papousekFirst(gameArray, playedCard, false);
       gameArray = temp.gameArray;
+
+      logMessage = 'chameleon na sebe vzal podobu papouška';
       break;
     }
     case 3: {
@@ -146,11 +153,13 @@ export function chameleonSecond(
       let temp = klokanFirst(gameArray, playedCard, false);
       gameArray = temp.gameArray;
 
+      logMessage = 'chameleon na sebe vzal podobu klokana';
       break;
     }
     case 4: {
       gameArray = opice(gameArray, playedCard, false);
 
+      logMessage = 'chameleon na sebe vzal podobu opice';
       break;
     }
     case 5: {
@@ -158,50 +167,64 @@ export function chameleonSecond(
       let temp = chameleonFirst(gameArray, playedCard, false);
       gameArray = temp.gameArray;
 
+      logMessage = 'chameleon na sebe vzal podobu chameleona';
       break;
     }
     case 6: {
       gameArray = tulen(gameArray, playedCard, false);
 
+      logMessage = 'chameleon na sebe vzal podobu tuleně';
       break;
     }
     case 7: {
       //zebra při položení nic neudělá
+      logMessage = 'chameleon na sebe vzal podobu zebry';
       break;
     }
     case 8: {
       //žirafa při položení nic neudělá
+      logMessage = 'chameleon na sebe vzal podobu žirafy';
       break;
     }
     case 9: {
       gameArray = had(gameArray, playedCard, false);
 
+      logMessage = 'chameleon na sebe vzal podobu hada';
       break;
     }
     case 10: {
       gameArray = krokodyl(gameArray, playedCard, false, gameArray.length - 2);
 
+      logMessage = 'chameleon na sebe vzal podobu krokodýla';
       break;
     }
     case 11: {
       gameArray = hroch(gameArray, playedCard, false, gameArray.length - 1);
 
+      logMessage = 'chameleon na sebe vzal podobu hrocha';
       break;
     }
     case 12: {
       gameArray = lev(gameArray, playedCard, false);
 
+      logMessage = 'chameleon na sebe vzal podobu lva';
       break;
     }
   }
 
   if (currentCard.id == 2 || currentCard.id == 3 || currentCard.id == 5)
-    return { gameArray: gameArray, chameleonCard: chameleonCard, isNeed: true };
+    return {
+      gameArray: gameArray,
+      chameleonCard: chameleonCard,
+      isNeed: true,
+      logMessage: logMessage,
+    };
   else
     return {
       gameArray: gameArray,
       chameleonCard: chameleonCard,
       isNeed: false,
+      logMessage: logMessage,
     };
 }
 
@@ -233,9 +256,7 @@ export function had(gameArray: Card[], playedCard: Card, setting: boolean) {
       return { name: x.name, id: x.id };
     });
     gameArray[
-      array.findIndex(
-        (x) => x.name === playedCard.name && x.id === playedCard.id
-      )
+      array.findIndex((x) => x.name === playedCard.name && x.id === 9)
     ].id = 5;
   }
   return gameArray;

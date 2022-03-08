@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as animals from '../functions/animals';
 import { vyhodnot, shuffle, divFunc } from '../functions/game-functions';
+import { SocketIoService } from '../services/socket-io.service';
+
+import { RulesComponent } from '../rules/rules.component';
+import { EndComponent } from '../end/end.component';
 
 export class Card {
   public id: number;
@@ -14,12 +20,43 @@ export class Card {
   }
 }
 
+export class ChatMessage {
+  public text: string;
+  public user: number;
+
+  constructor(text: string, user: number) {
+    this.text = text;
+    this.user = user;
+  }
+}
+
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent implements OnInit {
+  constructor(
+    private socketIoService: SocketIoService,
+    private route: ActivatedRoute,
+    private router: Router,
+    public dialog: MatDialog
+  ) {}
+
+  gameStarted: boolean = false;
+  gameID: string = '';
+  myID: number = 0;
+  countOfPlayers = 1;
+  countOfCards: number = 0;
+
+  message: string = '';
+  chatArray: ChatMessage[] = [];
+
+  log: string = '';
+  logArray: (string | Card[])[] = [];
+
+  gameInfo: string = 'na tahu je jiný hráč';
+
   div1: HTMLElement | undefined;
   div2: HTMLElement | undefined;
   div3: HTMLElement | undefined;
@@ -39,10 +76,7 @@ export class GameComponent implements OnInit {
   playedCard: Card | undefined;
   chameleonCard: number = 0;
 
-  hand1: Card[] = [];
-  hand2: Card[] = [];
-  hand3: Card[] = [];
-  hand4: Card[] = [];
+  hand: Card[] = [];
 
   div: (HTMLElement | undefined)[] = [];
 
@@ -54,56 +88,34 @@ export class GameComponent implements OnInit {
   }
 
   end() {
-    /*document.getElementById('start-menu')?.classList.remove('hide');
-    document.getElementById('game-plan')?.classList.add('hide');*/
     console.log('BAR');
     console.log(this.bar);
     console.log('TRASH');
     console.log(this.trash);
-    let b1 = 0;
-    let b2 = 0;
-    let u1 = 0;
-    let u2 = 0;
-    this.bar.forEach((x) => (x.player == 1 ? b1++ : b2++));
-    this.trash.forEach((x) => (x.player == 1 ? u1++ : u2++));
 
-    if (b1 != b2) {
-      alert(
-        'vyhral hrac ' +
-          (b1 > b2 ? '1' : '2') +
-          ' s poctem karet ' +
-          (b1 > b2 ? b1 : b2) +
-          '\n' +
-          'prohral hrac ' +
-          (b1 < b2 ? '1' : '2') +
-          ' s poctem karet ' +
-          (b1 < b2 ? b1 : b2)
-      );
-    } else {
-      alert('remiza - všichni mají ' + b1 + ' výhreních karet');
-    }
+    this.openEndDialog();
   }
 
   ////////////////////////////////////////
   /////////////FUNKCE CLICKED/////////////
   ////////////////////////////////////////
 
-  clicked(
-    card: Card,
-    arrayId: number,
-    gameArray: Card[],
-    bar: Card[],
-    trash: Card[]
-  ) {
+  clicked(card: Card, arrayId: number, gameArray: Card[]) {
     this.moveDone = false;
     this.playedCard = card;
+    let oldArray = gameArray;
     switch (this.playedCard.id) {
       case 1: {
         gameArray = animals.skunk(gameArray, this.playedCard, true);
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
+        if (gameArray.length == oldArray.length + 1) {
+          this.logArray.push('skunk vstoupil do řady');
+          this.logArray.push(gameArray);
+        } else {
+          this.logArray.push('skunk vysmradil zvířata z řady');
+          this.logArray.push(gameArray);
         }
+
         break;
       }
       case 2: {
@@ -113,6 +125,8 @@ export class GameComponent implements OnInit {
           this.toggleButtonsOff();
         } else {
           gameArray = temp.gameArray;
+          this.logArray.push('papousek vstoupil do řady');
+          this.logArray.push(gameArray);
         }
 
         break;
@@ -124,6 +138,8 @@ export class GameComponent implements OnInit {
           this.toggleButtonsOff();
         } else {
           gameArray = temp.gameArray;
+          this.logArray.push('klokan vstoupil do řady');
+          this.logArray.push(gameArray);
         }
 
         break;
@@ -131,9 +147,14 @@ export class GameComponent implements OnInit {
       case 4: {
         gameArray = animals.opice(gameArray, this.playedCard, true);
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
+        if (gameArray[0].id == 4 && gameArray[1].id == 4) {
+          this.logArray.push('opice vstoupila do řady a předběhla ji');
+          this.logArray.push(gameArray);
+        } else if (gameArray.length == oldArray.length + 1) {
+          this.logArray.push('opice vstoupila do řady');
+          this.logArray.push(gameArray);
         }
+
         break;
       }
       case 5: {
@@ -141,46 +162,46 @@ export class GameComponent implements OnInit {
 
         if (temp.isNeed) {
           this.toggleButtonsOff();
-        } else if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-          this.moveDone = true;
         } else {
           gameArray = temp.gameArray;
           this.moveDone = true;
         }
+
+        this.logArray.push('chameleon vstoupil do řady');
+        this.logArray.push(gameArray);
 
         break;
       }
       case 6: {
         gameArray = animals.tulen(gameArray, this.playedCard, true);
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-        }
+        this.logArray.push('tuleň otočil řadu');
+        this.logArray.push(gameArray);
+
         break;
       }
       case 7: {
         gameArray = animals.zebra(gameArray, this.playedCard);
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-        }
+        this.logArray.push('zebra vstoupila do řady');
+        this.logArray.push(gameArray);
+
         break;
       }
       case 8: {
         gameArray = animals.zirafa(gameArray, this.playedCard);
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-        }
+        this.logArray.push('žirafa vstoupila do řady');
+        this.logArray.push(gameArray);
+
         break;
       }
       case 9: {
         gameArray = animals.had(gameArray, this.playedCard, true);
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
-        }
+        this.logArray.push('had seřadil řadu');
+        this.logArray.push(gameArray);
+
         break;
       }
       case 10: {
@@ -191,9 +212,14 @@ export class GameComponent implements OnInit {
           gameArray.length - 1
         );
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
+        if (gameArray.length == oldArray.length + 1) {
+          this.logArray.push('krokodýl vstoupil do řady');
+          this.logArray.push(gameArray);
+        } else {
+          this.logArray.push('krokodýl snědl slabší zvířata před sebou');
+          this.logArray.push(gameArray);
         }
+
         break;
       }
       case 11: {
@@ -204,21 +230,30 @@ export class GameComponent implements OnInit {
           gameArray.length - 1
         );
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
+        if (gameArray.length == oldArray.length + 1) {
+          this.logArray.push('hroch vstoupil do řady');
+          this.logArray.push(gameArray);
+        } else {
+          this.logArray.push('hroch předběhl slabší zvířata před sebou');
+          this.logArray.push(gameArray);
         }
+
         break;
       }
       case 12: {
         gameArray = animals.lev(gameArray, this.playedCard, true);
 
-        if (gameArray.length == 5) {
-          [gameArray, this.bar, this.trash] = vyhodnot(gameArray, bar, trash);
+        if (gameArray.length == oldArray.length + 1) {
+          this.logArray.push('lev vstoupil na první místo');
+          this.logArray.push(gameArray);
+        } else {
+          this.logArray.push('lev vtoupil do řady, ale byl vyhnán prvním lvem');
+          this.logArray.push(gameArray);
         }
+
         break;
       }
       default: {
-        //provede se funkce clicked bez položení karty
       }
     }
 
@@ -227,9 +262,19 @@ export class GameComponent implements OnInit {
       this.playedCard.id == 3 ||
       this.playedCard.id == 5
     ) {
+      this.socketIoService.sendGameUpdate(
+        this.gameID,
+        gameArray,
+        this.bar,
+        this.trash,
+        this.countOfCards,
+        gameArray.length == 1 ? this.myID : this.myID - 1,
+        this.logArray
+      );
+      if (gameArray.length == 1) this.isItMyTurn(false);
     } else this.moveDone = true;
 
-    this.hand1.splice(arrayId, 1);
+    this.hand.splice(arrayId, 1);
     return gameArray;
   }
 
@@ -238,44 +283,20 @@ export class GameComponent implements OnInit {
   /////////////////////////////////////////
 
   but1 = () => {
-    this.gameArray = this.clicked(
-      this.hand1[0],
-      0,
-      this.gameArray,
-      this.bar,
-      this.trash
-    );
-    this.vyhodnoceniTahu(true);
+    this.gameArray = this.clicked(this.hand[0], 0, this.gameArray);
+    this.vyhodnoceniTahu();
   };
   but2 = () => {
-    this.gameArray = this.clicked(
-      this.hand1[1],
-      1,
-      this.gameArray,
-      this.bar,
-      this.trash
-    );
-    this.vyhodnoceniTahu(true);
+    this.gameArray = this.clicked(this.hand[1], 1, this.gameArray);
+    this.vyhodnoceniTahu();
   };
   but3 = () => {
-    this.gameArray = this.clicked(
-      this.hand1[2],
-      2,
-      this.gameArray,
-      this.bar,
-      this.trash
-    );
-    this.vyhodnoceniTahu(true);
+    this.gameArray = this.clicked(this.hand[2], 2, this.gameArray);
+    this.vyhodnoceniTahu();
   };
   but4 = () => {
-    this.gameArray = this.clicked(
-      this.hand1[3],
-      3,
-      this.gameArray,
-      this.bar,
-      this.trash
-    );
-    this.vyhodnoceniTahu(true);
+    this.gameArray = this.clicked(this.hand[3], 3, this.gameArray);
+    this.vyhodnoceniTahu();
   };
 
   /////////////////////////////////////////
@@ -318,8 +339,27 @@ export class GameComponent implements OnInit {
     );
     this.dFunc(temp);
   };
+  logScrollDown() {
+    document.getElementById('log')!.scrollTop =
+      document.getElementById('log')!.scrollHeight;
+  }
+  chatScrollDown() {
+    document.getElementById('chat')!.scrollTop =
+      document.getElementById('chat')!.scrollHeight;
+  }
 
-  dFunc(temp: { gameArray: Card[]; chameleonCard: number; valid: boolean }) {
+  dFunc(temp: {
+    gameArray: Card[];
+    chameleonCard: number;
+    valid: boolean;
+    logMessage: string;
+  }) {
+    console.log(temp);
+    if (temp.logMessage != '') {
+      this.logArray.push(temp.logMessage);
+      this.logArray.push(temp.gameArray);
+    }
+
     if (temp.valid) {
       if (temp.chameleonCard == 0) {
         this.chameleonCard = 0;
@@ -327,59 +367,59 @@ export class GameComponent implements OnInit {
       } else this.chameleonCard = temp.chameleonCard;
 
       this.gameArray = temp.gameArray;
-      this.vyhodnoceniTahu(false);
 
-      if (this.gameArray.length == 5 && this.moveDone) {
-        [this.gameArray, this.bar, this.trash] = vyhodnot(
-          this.gameArray,
-          this.bar,
-          this.trash
-        );
-        this.vyhodnoceniTahu(true);
-      }
+      this.vyhodnoceniTahu();
     }
   }
   /////////////////////////////////////////
   ////////////ZBYLÉ FUNKCE THIS////////////
   /////////////////////////////////////////
-  vyhodnoceniTahu(end: boolean) {
+  vyhodnoceniTahu() {
     if (this.moveDone) {
       this.gameArray = this.repeatCards(this.gameArray);
-    }
-
-    this.div1!.textContent = this.gameArray[0]?.id.toString();
-    this.div2!.textContent = this.gameArray[1]?.id.toString();
-    this.div3!.textContent = this.gameArray[2]?.id.toString();
-    this.div4!.textContent = this.gameArray[3]?.id.toString();
-    this.div5!.textContent = this.gameArray[4]?.id.toString();
-
-    if (
-      this.hand1.length == 0 &&
-      this.chameleonCard == 0 &&
-      this.moveDone &&
-      end
-    ) {
-      this.end();
+      if (this.gameArray.length == 5) {
+        [this.gameArray, this.bar, this.trash] = vyhodnot(
+          this.gameArray,
+          this.bar,
+          this.trash
+        );
+        this.logArray.push('řada je plná - vyhodnocení');
+        this.logArray.push(this.gameArray);
+      }
+      this.countOfCards--;
+      this.socketIoService.sendGameUpdate(
+        this.gameID,
+        this.gameArray,
+        this.bar,
+        this.trash,
+        this.countOfCards,
+        this.myID,
+        this.logArray
+      );
+      this.isItMyTurn(false);
     }
   }
 
   repeatCards(gameArray: Card[]) {
     if (gameArray.length > 1) {
-      let zirafaKrok = false;
+      let zirafaJump = false;
+      let animalMoved = false;
       for (let i = gameArray.length - 1; i >= 1; i--) {
+        let lastArray = gameArray;
         if (this.playedCard !== gameArray[i]) {
           switch (gameArray[i].id) {
             case 8: {
               if (
                 this.playedCard! !== gameArray[i] &&
-                !zirafaKrok &&
+                !zirafaJump &&
                 gameArray[i - 1]?.id < gameArray[i]?.id
               ) {
                 let temp = gameArray[i - 1];
                 gameArray[i - 1] = gameArray[i];
                 gameArray[i] = temp;
-                zirafaKrok = true;
-                console.log('zirafa přeskočila');
+                zirafaJump = true;
+                this.logArray.push('žirafa předběhla slabší zvíře před sebou');
+                this.logArray.push(gameArray);
               }
               break;
             }
@@ -391,13 +431,27 @@ export class GameComponent implements OnInit {
                 false,
                 i - 1
               );
-              i = i - (size - gameArray.length);
-              console.log('krokodýl sežral');
+              if (size - gameArray.length != 0) {
+                i = i - (size - gameArray.length);
+                this.logArray.push('krokodýl sežral slabší zvířata před sebou');
+                this.logArray.push(gameArray);
+                animalMoved
+                  ? this.repeatCards(gameArray)
+                  : (animalMoved = true);
+              }
+
               break;
             }
             case 11: {
               gameArray = animals.hroch(gameArray, gameArray[i], false, i);
-              console.log('hroch předběhl');
+              if (gameArray[i] != lastArray[i]) {
+                this.logArray.push('hroch předběhl slabší zvířata před sebou');
+                this.logArray.push(gameArray);
+                animalMoved
+                  ? this.repeatCards(gameArray)
+                  : (animalMoved = true);
+              }
+
               break;
             }
             default: {
@@ -418,17 +472,24 @@ export class GameComponent implements OnInit {
     switch (this.gameArray.length - 1) {
       case 1: {
         this.div1?.addEventListener('click', this.d1);
+        this.div1?.classList.add('clickable');
         break;
       }
       case 2: {
         this.div1?.addEventListener('click', this.d1);
         this.div2?.addEventListener('click', this.d2);
+        this.div1?.classList.add('clickable');
+        this.div2?.classList.add('clickable');
         break;
       }
       case 3: {
         this.div1?.addEventListener('click', this.d1);
         this.div2?.addEventListener('click', this.d2);
         this.div3?.addEventListener('click', this.d3);
+        if (this.playedCard!.id != 3 || this.chameleonCard != 3)
+          this.div1?.classList.add('clickable');
+        this.div2?.classList.add('clickable');
+        this.div3?.classList.add('clickable');
         break;
       }
       case 4: {
@@ -436,10 +497,17 @@ export class GameComponent implements OnInit {
         this.div2?.addEventListener('click', this.d2);
         this.div3?.addEventListener('click', this.d3);
         this.div4?.addEventListener('click', this.d4);
+        if (this.playedCard!.id != 3 || this.chameleonCard != 3) {
+          this.div1?.classList.add('clickable');
+          this.div2?.classList.add('clickable');
+        }
+        this.div3?.classList.add('clickable');
+        this.div4?.classList.add('clickable');
         break;
       }
     }
-    console.log('vyber kartu z hrácího pole');
+    if (this.playedCard?.id != 5) this.gameInfo = 'vyber kartu z hrácího pole';
+    else this.gameInfo = 'chameleon vybírá kartu pro ' + this.playedCard;
   }
 
   toggleButtonsOn() {
@@ -447,6 +515,10 @@ export class GameComponent implements OnInit {
     this.div2?.removeEventListener('click', this.d2);
     this.div3?.removeEventListener('click', this.d3);
     this.div4?.removeEventListener('click', this.d4);
+    this.div1?.classList.remove('clickable');
+    this.div2?.classList.remove('clickable');
+    this.div3?.classList.remove('clickable');
+    this.div4?.classList.remove('clickable');
 
     this.button1?.addEventListener('click', this.but1);
     this.button2?.addEventListener('click', this.but2);
@@ -454,7 +526,6 @@ export class GameComponent implements OnInit {
     this.button4?.addEventListener('click', this.but4);
 
     this.moveDone = true;
-    console.log('pokračuj v normálním hraní');
   }
 
   zobraz() {
@@ -466,32 +537,14 @@ export class GameComponent implements OnInit {
   //////////////////////////////////////////////////////
 
   ngOnInit(): void {
-    this.hand1 = [
-      new Card(1, '1 skunk', 1),
-      new Card(2, '2 papousek', 1),
-      new Card(3, '3 klokan', 1),
-      new Card(4, '4 opice', 1),
-      new Card(5, '5 chameleon', 1),
-      new Card(6, '6 tulen', 1),
-      new Card(7, '7 zebra', 1),
-      new Card(8, '8 zirafa', 1),
-      new Card(9, '9 had', 1),
-      new Card(10, '10 krokodyl', 2),
-      new Card(11, '11 hroch', 1),
-      new Card(12, '12 lev', 1),
-      new Card(1, '1 skunk', 2),
-      new Card(2, '2 papousek', 2),
-      new Card(3, '3 klokan', 2),
-      new Card(4, '4 opice', 2),
-      new Card(5, '5 chameleon', 2),
-      new Card(6, '6 tulen', 2),
-      new Card(7, '7 zebra', 2),
-      new Card(8, '8 zirafa', 2),
-      new Card(9, '9 had', 2),
-      new Card(10, '10 krokodyl', 2),
-      new Card(11, '11 hroch', 2),
-      new Card(12, '12 lev', 2),
-    ];
+    this.gameID = this.route.snapshot.paramMap.get('id')!;
+
+    if (this.socketIoService.amIconected()) {
+      this.socketIoService.connectToRoom(this.gameID);
+    } else {
+      this.socketIoService.connect();
+      this.socketIoService.roomExist(this.gameID);
+    }
 
     this.div1 = document.getElementById('div1')!;
     this.div2 = document.getElementById('div2')!;
@@ -504,14 +557,146 @@ export class GameComponent implements OnInit {
     this.button3 = document.getElementById('button-3')!;
     this.button4 = document.getElementById('button-4')!;
 
-    shuffle(this.hand1);
-    shuffle(this.hand2);
-    shuffle(this.hand3);
-    shuffle(this.hand4);
+    this.canIConnect();
+    this.recieveHand();
+    this.recieveJoinPlayers();
+    this.recieveStartGame();
+    this.recieveGameUpdate();
+    this.recieveMessage();
+    this.playerDisconnect();
 
-    this.button1?.addEventListener('click', this.but1);
-    this.button2?.addEventListener('click', this.but2);
-    this.button3?.addEventListener('click', this.but3);
-    this.button4?.addEventListener('click', this.but4);
+    this.router.events.subscribe(() => {
+      this.socketIoService.disconnectMe();
+    });
+  }
+
+  startGame() {
+    this.socketIoService.startGame();
+  }
+
+  recieveStartGame() {
+    this.socketIoService.recieveStartGame().subscribe(() => {
+      this.gameStarted = true;
+      document.getElementById('waiting')?.classList.add('hide');
+      document.getElementById('game')?.classList.remove('hide');
+    });
+  }
+
+  canIConnect() {
+    this.socketIoService.canIConnect().subscribe((data) => {
+      switch (data) {
+        case 1: {
+          this.socketIoService.connectToRoom(this.gameID);
+          break;
+        }
+        case 2: {
+          alert('tato místnost je plná');
+          this.router.navigate(['/home']);
+          break;
+        }
+        case 3: {
+          alert('hra už začala');
+          this.router.navigate(['/home']);
+          break;
+        }
+        case 4: {
+          alert('místnost neexistuje');
+          this.router.navigate(['/home']);
+          break;
+        }
+      }
+    });
+  }
+
+  recieveHand() {
+    this.socketIoService.recieveHand().subscribe((data) => {
+      this.hand = shuffle(data.hand);
+      this.myID = data.playerID;
+      this.countOfPlayers = data.playerID;
+      this.countOfCards += 12;
+      if (this.myID == 1) this.isItMyTurn(true);
+    });
+  }
+
+  recieveJoinPlayers() {
+    this.socketIoService.recieveJoinPlayers().subscribe((message) => {
+      this.countOfPlayers++;
+      this.countOfCards += 12;
+    });
+  }
+
+  recieveGameUpdate() {
+    this.socketIoService.recieveGameUpdate(this.gameID).subscribe((data) => {
+      this.gameArray = data.gameArray;
+      this.bar = data.bar;
+      this.trash = data.trash;
+      this.countOfCards = data.countOfCards;
+      this.logArray = data.logArray;
+      if (data.playerID == this.myID && this.moveDone) this.isItMyTurn(true);
+      if (this.countOfCards == 0) this.end();
+    });
+  }
+
+  playerDisconnect() {
+    this.socketIoService.playerDisconnect().subscribe((message) => {
+      setTimeout(() => window.alert(message), 10);
+      this.router.navigate(['/home']);
+      this.socketIoService.disconnectMe();
+    });
+  }
+
+  isItMyTurn(setting: boolean) {
+    if (setting) {
+      this.gameInfo = 'jsi na tahu';
+      this.button1?.addEventListener('click', this.but1);
+      this.button2?.addEventListener('click', this.but2);
+      this.button3?.addEventListener('click', this.but3);
+      this.button4?.addEventListener('click', this.but4);
+    } else {
+      this.gameInfo = 'na tahu je jiný hráč';
+      this.button1?.removeEventListener('click', this.but1);
+      this.button2?.removeEventListener('click', this.but2);
+      this.button3?.removeEventListener('click', this.but3);
+      this.button4?.removeEventListener('click', this.but4);
+    }
+  }
+
+  openRulesDialog() {
+    const dialogRef = this.dialog.open(RulesComponent);
+  }
+
+  openEndDialog() {
+    const dialogRef = this.dialog.open(EndComponent, {
+      data: { bar: this.bar, trash: this.trash },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['/home']);
+    });
+  }
+
+  sendMessage() {
+    if (this.message != '') {
+      this.chatArray.push(new ChatMessage(this.message, this.myID));
+      this.chatScrollDown();
+      this.socketIoService.sendMessage(this.message, this.myID);
+      this.message = '';
+    }
+  }
+
+  recieveMessage() {
+    this.socketIoService.recieveMessage().subscribe((message) => {
+      this.chatArray.push(new ChatMessage(message.message, message.user));
+      this.chatScrollDown();
+    });
+  }
+  getCard(log: string | Card[], id: number): string {
+    let card = log[id] as Card;
+    let img = '';
+
+    if (card) img = '../../assets/imgs/' + card.name + card.player + '.png';
+    else img = '../../assets/imgs/blank.png';
+
+    return img;
   }
 }

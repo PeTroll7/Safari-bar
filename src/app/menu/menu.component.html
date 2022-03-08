@@ -1,11 +1,20 @@
-<div class="head-title">
-  <h1>SAFARI-BAR</h1>
+<!--<div *ngIf="!loaded; else content">
+  <div class="loading">loading</div>
 </div>
-<br />
+<ng-template #content></ng-template>
+-->
 
-<div fxLayout="row" fxLayoutAlign="space-around center">
-  <div>content</div>
-  <div>content</div>
+<div fxLayout="column" fxLayoutGap="50px" fxLayoutAlign=" center">
+  <div class="title">SAFARI BAR</div>
+
+  <div class="defaultText">ZADEJ NÁZEV MÍSTNOSTI</div>
+
+  <mat-form-field class="input" appearance="fill">
+    <mat-label>Room ID</mat-label>
+    <input matInput [(ngModel)]="ID" autocomplete="off" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="createGame()">
+    Basic
+  </button>
 </div>
-
-<button routerLink="/game">HRÁT</button>
