@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  SOCKET_ENDPORT: 'http://localhost:3000',
+  SOCKET_ENDPORT: 'https://safri-bar-server.herokuapp.com',
 };
 
 /*
