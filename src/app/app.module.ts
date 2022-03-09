@@ -16,12 +16,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { RulesComponent } from './rules/rules.component';
 import { EndComponent } from './end/end.component';
 
 @NgModule({
-  declarations: [AppComponent, GameComponent, MenuComponent, RulesComponent, EndComponent],
+  declarations: [
+    AppComponent,
+    GameComponent,
+    MenuComponent,
+    RulesComponent,
+    EndComponent,
+  ],
   imports: [
     BrowserModule,
     AppRouterModule,
@@ -35,6 +42,7 @@ import { EndComponent } from './end/end.component';
     MatMenuModule,
     MatDialogModule,
     MatCardModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

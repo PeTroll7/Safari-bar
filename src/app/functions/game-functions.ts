@@ -46,32 +46,34 @@ export function vyhodnot(gameArray: Card[], bar: Card[], trash: Card[]) {
 export function divFunc(
   gameArray: Card[],
   playedCard: Card,
-  chameleonCard: number,
+  chameleonCard: { id: number; name: string },
   buttonId: number
 ) {
   let temp = {
     gameArray: gameArray,
-    chameleonCard: 0,
+    chameleonCard: { id: 0, name: '' },
     isNeed: true,
     logMessage: '',
   };
   let valid = true;
-  if (playedCard?.id === 2 || chameleonCard === 2) {
+  if (playedCard?.id === 2 || chameleonCard.id === 2) {
     gameArray = animals.papousekSecond(buttonId, gameArray);
-    chameleonCard = 0;
+    chameleonCard.id = 0;
+    chameleonCard.name = 'papousek';
 
     if (playedCard.id == 2)
       temp.logMessage = 'paposek vstoupil do řady a vyhodil zvíře';
   } else if (
     (playedCard?.id == 3 && gameArray.length <= buttonId + 3) ||
-    (chameleonCard === 3 && gameArray.length <= buttonId + 3)
+    (chameleonCard.id === 3 && gameArray.length <= buttonId + 3)
   ) {
     gameArray = animals.klokanSecond(buttonId, gameArray, playedCard!);
-    chameleonCard = 0;
+    chameleonCard.id = 0;
+    chameleonCard.name = 'klokan';
     valid = true;
     if (playedCard.id == 3)
       temp.logMessage = 'klokan vstoupil do řady a přeskočil zvíře';
-  } else if (playedCard?.id == 5 && chameleonCard != 3) {
+  } else if (playedCard?.id == 5 && chameleonCard.id != 3) {
     temp = animals.chameleonSecond(buttonId, gameArray, playedCard);
     if (temp.isNeed) {
     } else {

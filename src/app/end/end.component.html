@@ -1,5 +1,13 @@
-<p>end works!</p>
-<h1>VYHRÁL HRÁČ {{ win }}</h1>
+<h1>VYHRÁL HRÁČ {{ win != 5 ? (win == 0 ? +(+win) : win) : playerWin }}</h1>
+<h2>Výherní karty</h2>
+<div fxLayout="row" fxLayoutAlign="space-around">
+  <div *ngFor="let card of playerArray[win != 5 ? win : playerWin]">
+    <img
+      class="img"
+      src="../../assets/imgs/{{ card.name }}{{ card.player }}.png"
+    />
+  </div>
+</div>
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>

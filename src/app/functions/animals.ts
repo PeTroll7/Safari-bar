@@ -129,7 +129,7 @@ export function chameleonSecond(
   playedCard: Card
 ) {
   let currentCard = gameArray[cardIndex];
-  let chameleonCard = 0;
+  let chameleonCard = { id: 0, name: '' };
 
   let logMessage = '';
 
@@ -141,7 +141,8 @@ export function chameleonSecond(
       break;
     }
     case 2: {
-      chameleonCard = 2;
+      chameleonCard.id = 2;
+      chameleonCard.name = 'papousek';
       let temp = papousekFirst(gameArray, playedCard, false);
       gameArray = temp.gameArray;
 
@@ -149,7 +150,8 @@ export function chameleonSecond(
       break;
     }
     case 3: {
-      chameleonCard = 3;
+      chameleonCard.id = 3;
+      chameleonCard.name = 'klokan';
       let temp = klokanFirst(gameArray, playedCard, false);
       gameArray = temp.gameArray;
 
@@ -163,7 +165,8 @@ export function chameleonSecond(
       break;
     }
     case 5: {
-      chameleonCard = 5;
+      chameleonCard.id = 5;
+      chameleonCard.name = 'chameleon';
       let temp = chameleonFirst(gameArray, playedCard, false);
       gameArray = temp.gameArray;
 

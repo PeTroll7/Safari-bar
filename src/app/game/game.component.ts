@@ -74,7 +74,7 @@ export class GameComponent implements OnInit {
   gameArray: Card[] = [];
 
   playedCard: Card | undefined;
-  chameleonCard: number = 0;
+  chameleonCard: { id: number; name: string } = { id: 0, name: '' };
 
   hand: Card[] = [];
 
@@ -125,6 +125,7 @@ export class GameComponent implements OnInit {
           this.toggleButtonsOff();
         } else {
           gameArray = temp.gameArray;
+          this.moveDone = true;
           this.logArray.push('papousek vstoupil do řady');
           this.logArray.push(gameArray);
         }
@@ -138,6 +139,7 @@ export class GameComponent implements OnInit {
           this.toggleButtonsOff();
         } else {
           gameArray = temp.gameArray;
+          this.moveDone = true;
           this.logArray.push('klokan vstoupil do řady');
           this.logArray.push(gameArray);
         }
@@ -147,7 +149,7 @@ export class GameComponent implements OnInit {
       case 4: {
         gameArray = animals.opice(gameArray, this.playedCard, true);
 
-        if (gameArray[0].id == 4 && gameArray[1].id == 4) {
+        if (gameArray[0]?.id == 4 && gameArray[1]?.id == 4) {
           this.logArray.push('opice vstoupila do řady a předběhla ji');
           this.logArray.push(gameArray);
         } else if (gameArray.length == oldArray.length + 1) {
@@ -355,21 +357,25 @@ export class GameComponent implements OnInit {
 
   dFunc(temp: {
     gameArray: Card[];
-    chameleonCard: number;
+    chameleonCard: { id: number; name: string };
     valid: boolean;
     logMessage: string;
   }) {
-    console.log(temp);
     if (temp.logMessage != '') {
       this.logArray.push(temp.logMessage);
       this.logArray.push(temp.gameArray);
     }
 
     if (temp.valid) {
-      if (temp.chameleonCard == 0) {
-        this.chameleonCard = 0;
+      if (temp.chameleonCard.id == 0) {
+        this.chameleonCard.id = 0;
+        this.chameleonCard.name = '';
         this.toggleButtonsOn();
-      } else this.chameleonCard = temp.chameleonCard;
+      } else {
+        this.chameleonCard.id = temp.chameleonCard.id;
+        this.chameleonCard.name = temp.chameleonCard.name;
+        this.toggleButtonsOff();
+      }
 
       this.gameArray = temp.gameArray;
 
@@ -484,9 +490,13 @@ export class GameComponent implements OnInit {
         this.div1?.addEventListener('click', this.d1);
         this.div2?.addEventListener('click', this.d2);
         this.div3?.addEventListener('click', this.d3);
-        if (this.playedCard!.id != 3 || this.chameleonCard != 3) {
+        if (
+          (this.playedCard!.id == 5 && this.chameleonCard.id == 3) ||
+          this.playedCard!.id == 3
+        ) {
+          this.div1?.classList.remove('clickable');
+        } else {
           this.div1?.classList.add('clickable');
-          console.log('ano' + '1');
         }
 
         this.div2?.classList.add('clickable');
@@ -498,18 +508,27 @@ export class GameComponent implements OnInit {
         this.div2?.addEventListener('click', this.d2);
         this.div3?.addEventListener('click', this.d3);
         this.div4?.addEventListener('click', this.d4);
-        if (this.playedCard!.id != 3 || this.chameleonCard != 3) {
+        if (
+          (this.playedCard!.id == 5 && this.chameleonCard.id == 3) ||
+          this.playedCard!.id == 3
+        ) {
+          this.div1?.classList.remove('clickable');
+          this.div2?.classList.remove('clickable');
+        } else {
           this.div1?.classList.add('clickable');
           this.div2?.classList.add('clickable');
-          console.log('ano' + '2');
         }
         this.div3?.classList.add('clickable');
         this.div4?.classList.add('clickable');
         break;
       }
     }
-    if (this.playedCard?.id != 5) this.gameInfo = 'vyber kartu z hrácího pole';
-    else this.gameInfo = 'chameleon vybírá kartu pro ' + this.playedCard;
+
+    if (this.chameleonCard.id != 0) {
+      this.gameInfo = 'chameleon vybírá kartu pro ' + this.chameleonCard!.name;
+    } else {
+      this.gameInfo = 'vyber kartu z hrácího pole';
+    }
   }
 
   toggleButtonsOn() {
@@ -664,7 +683,9 @@ export class GameComponent implements OnInit {
   }
 
   openRulesDialog() {
-    const dialogRef = this.dialog.open(RulesComponent);
+    const dialogRef = this.dialog.open(RulesComponent, {
+      height: '80%',
+    });
   }
 
   openEndDialog() {

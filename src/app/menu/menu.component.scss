@@ -16,10 +16,12 @@
 }
 
 .loading {
-  padding-top: 15%;
+  padding-top: 45vw;
+  padding-left: 30vw;
   text-align: center;
-  height: 100%;
-  width: 100%;
   font-size: 200px;
   font-weight: bold;
+  z-index: 999;
+  position: absolute;
+  align-items: center;
 }

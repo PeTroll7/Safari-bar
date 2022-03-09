@@ -1,20 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { delay, of } from 'rxjs';
+import { RulesComponent } from '../rules/rules.component';
 import { SocketIoService } from '../services/socket-io.service';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
+  animations: [
+    trigger('fadeout', [
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate('280ms ease-out', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, AfterViewInit {
   ID: string = '';
 
   loaded: boolean = false;
 
   constructor(
     private socketIoService: SocketIoService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {}
 
   createGame() {
@@ -23,10 +36,14 @@ export class MenuComponent implements OnInit {
     }
   }
 
+  openRulesDialog() {
+    const dialogRef = this.dialog.open(RulesComponent, {
+      height: '80%',
+      autoFocus: false,
+    });
+  }
+
   ngOnInit(): void {
-    window.onload = () => {
-      this.loaded = true;
-    };
     this.socketIoService.connect();
     this.canIConnect();
 
@@ -35,6 +52,14 @@ export class MenuComponent implements OnInit {
         this.createGame();
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    of(null)
+      .pipe(delay(2000))
+      .subscribe(() => {
+        this.loaded = true;
+      });
   }
 
   canIConnect() {

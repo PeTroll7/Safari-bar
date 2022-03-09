@@ -84,7 +84,7 @@
       id="button-1"
       class="hand-card"
       [ngClass]="hand[0] ? 'hand-card-hover' : ''"
-      src="../../assets/imgs/{{ hand[0]?.name ? hand[0].name : 'back' }}{{
+      src="../../assets/imgs/{{ hand[0]?.name ? hand[0].name : 'blank' }}{{
         hand[0]?.player
       }}.png"
     />
@@ -92,7 +92,7 @@
       id="button-2"
       class="hand-card"
       [ngClass]="hand[1] ? 'hand-card-hover' : ''"
-      src="../../assets/imgs/{{ hand[1]?.name ? hand[1].name : 'back' }}{{
+      src="../../assets/imgs/{{ hand[1]?.name ? hand[1].name : 'blank' }}{{
         hand[1]?.player
       }}.png"
     />
@@ -100,7 +100,7 @@
       id="button-3"
       class="hand-card"
       [ngClass]="hand[2] ? 'hand-card-hover' : ''"
-      src="../../assets/imgs/{{ hand[2]?.name ? hand[2].name : 'back' }}{{
+      src="../../assets/imgs/{{ hand[2]?.name ? hand[2].name : 'blank' }}{{
         hand[2]?.player
       }}.png"
     />
@@ -108,37 +108,11 @@
       id="button-4"
       class="hand-card"
       [ngClass]="hand[3] ? 'hand-card-hover' : ''"
-      src="../../assets/imgs/{{ hand[3]?.name ? hand[3].name : 'back' }}{{
+      src="../../assets/imgs/{{ hand[3]?.name ? hand[3].name : 'blank' }}{{
         hand[3]?.player
       }}.png"
     />
   </div>
-  <!--<div fxLayout="row" fxLayoutAlign="center">
-    <input
-      type="button"
-      id="button-1"
-      value="{{ hand[0]?.name ? hand[0].name : 'out' }}"
-      [disabled]="hand[0] == undefined"
-    />
-    <input
-      type="button"
-      id="button-2"
-      value="{{ hand[1]?.name ? hand[1].name : 'out' }}"
-      [disabled]="hand[1] == undefined"
-    />
-    <input
-      type="button"
-      id="button-3"
-      value="{{ hand[2]?.name ? hand[2].name : 'out' }}"
-      [disabled]="hand[2] == undefined"
-    />
-    <input
-      type="button"
-      id="button-4"
-      value="{{ hand[3]?.name ? hand[3].name : 'out' }}"
-      [disabled]="hand[3] == undefined"
-    />
-  </div>-->
 
   <div class="gameInfo">
     {{ gameInfo }}

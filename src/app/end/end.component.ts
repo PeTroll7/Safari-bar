@@ -12,44 +12,48 @@ export class EndComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { bar: Card[]; trash: Card[] }
   ) {}
 
-  win: Number = 0;
+  win = 0;
+  winArray: number[] = [0];
+  playerWin = 0;
+
+  playerBarCardsCount = [0, 0, 0, 0, 0];
+  playerBar1: Card[] = [];
+  playerBar2: Card[] = [];
+  playerBar3: Card[] = [];
+  playerBar4: Card[] = [];
+
+  playerArray: Card[][] = [];
 
   ngOnInit(): void {
     console.log(this.data);
-
-    let playerBarCardsArray = [0, 0, 0, 0, 0];
-    let playerBar1 = [];
-    let playerBar2 = [];
-    let playerBar3 = [];
-    let playerBar4 = [];
 
     let playerTrash1 = [];
     let playerTrash2 = [];
     let playerTrash3 = [];
     let playerTrash4 = [];
 
-    this.data.bar.forEach((x) => {
-      playerBarCardsArray[x.player]++;
-      switch (x.player) {
+    this.data.bar.forEach((card) => {
+      this.playerBarCardsCount[card.player]++;
+      switch (card.player) {
         case 1: {
-          playerBar1.push(x);
+          this.playerBar1.push(card);
           break;
         }
         case 2: {
-          playerBar2.push(x);
+          this.playerBar2.push(card);
           break;
         }
         case 3: {
-          playerBar3.push(x);
+          this.playerBar3.push(card);
           break;
         }
         case 4: {
-          playerBar4.push(x);
+          this.playerBar4.push(card);
           break;
         }
       }
     });
-    this.data.trash.forEach((x) => {
+    /*this.data.trash.forEach((x) => {
       switch (x.player) {
         case 1: {
           playerTrash1.push(x);
@@ -68,14 +72,37 @@ export class EndComponent implements OnInit {
           break;
         }
       }
-    });
+    });*/
 
-    let array = playerBarCardsArray.map((x) => {
-      return x;
-    });
+    let max = Math.max(...this.playerBarCardsCount);
+    if (this.playerBarCardsCount.filter((x) => x == max).length > 1) {
+      this.win = 5;
+      let countPoints = [999];
 
-    let max = Math.max(...array);
+      for (let i = 0; i < this.playerBarCardsCount.length; i++) {
+        if (this.playerBarCardsCount[i] == max) {
+          this.winArray.push(i);
+          countPoints.push(0);
+        }
+      }
 
-    this.win = playerBarCardsArray.indexOf(max);
+      this.data.bar.forEach((x) => {
+        countPoints[this.winArray.indexOf(x.player)] += x.id;
+      });
+
+      let min = Math.min(...countPoints);
+
+      this.playerWin = this.winArray[countPoints.indexOf(min)];
+    } else {
+      this.win = this.playerBarCardsCount.indexOf(max);
+    }
+    this.playerArray = [
+      [],
+      this.playerBar1,
+      this.playerBar2,
+      this.playerBar3,
+      this.playerBar4,
+    ];
+    console.log(this.playerArray[this.playerWin]);
   }
 }

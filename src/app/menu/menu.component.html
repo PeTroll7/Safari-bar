@@ -1,20 +1,29 @@
-<!--<div *ngIf="!loaded; else content">
-  <div class="loading">loading</div>
+<div
+  fxLayout="column"
+  fxLayoutAlign="center stretch"
+  *ngIf="!loaded; else content"
+  [@fadeout]
+>
+  <div class="loading"><mat-spinner [diameter]="700"></mat-spinner></div>
 </div>
-<ng-template #content></ng-template>
--->
 
-<div fxLayout="column" fxLayoutGap="50px" fxLayoutAlign=" center">
-  <div class="title">SAFARI BAR</div>
+<ng-template #content>
+  <div fxLayout="column" fxLayoutGap="50px" fxLayoutAlign=" center">
+    <div class="title">SAFARI BAR</div>
 
-  <div class="defaultText">ZADEJ NÁZEV MÍSTNOSTI</div>
+    <div class="defaultText">ZADEJ NÁZEV MÍSTNOSTI</div>
 
-  <mat-form-field class="input" appearance="fill" id="idInput">
-    <mat-label>Room ID</mat-label>
-    <input matInput [(ngModel)]="ID" autocomplete="off" />
-  </mat-form-field>
+    <mat-form-field class="input" appearance="fill" id="idInput">
+      <mat-label>Room ID</mat-label>
+      <input matInput [(ngModel)]="ID" autocomplete="off" />
+    </mat-form-field>
 
-  <button mat-raised-button color="primary" (click)="createGame()">
-    START
-  </button>
-</div>
+    <button mat-raised-button color="primary" (click)="createGame()">
+      START
+    </button>
+
+    <div class="rules" (click)="openRulesDialog()">
+      <i class="fa fa-2x fa-solid fa-question-circle"></i>
+    </div>
+  </div>
+</ng-template>
