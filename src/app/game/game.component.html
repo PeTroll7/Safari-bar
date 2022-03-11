@@ -1,13 +1,7 @@
 <div class="waiting-body body" id="waiting">
   <div class="title">čekání na další hráče</div>
-  <div
-    fxLayout="column"
-    fxLayoutAlign="space-around center"
-    class="defaultText"
-  >
-    <div class="defaultText">hra lze zapnout i s méně hráči</div>
-
-    {{ countOfPlayers }} / 4
+  <div fxLayout="column" fxLayoutAlign=" center" fxLayoutGap="2vw">
+    <div class="defaultText">{{ countOfPlayers }} / 4</div>
     <button
       mat-raised-button
       color="primary"
@@ -16,6 +10,22 @@
     >
       START GAME
     </button>
+
+    <div class="copyText">
+      zkopírovat odkaz pro připojení do hry<br />
+
+      <div *ngIf="!copied" (click)="copyURL()">
+        <span class="fa-stack">
+          <i class="fa fa-2x fa-circle"></i>
+          <i class="fa fa-copy fa-stack-1x fa-inverse"></i>
+        </span>
+      </div>
+      <i *ngIf="copied" class="fa fa-2x fa-solid fa-check"></i>
+    </div>
+
+    <div (click)="openRulesDialog()">
+      <i class="fa fa-2x fa-solid fa-question-circle"></i>
+    </div>
   </div>
 </div>
 

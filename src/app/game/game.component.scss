@@ -18,10 +18,16 @@ body {
   color: white;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 0 15px;
+  margin-bottom: 2vw;
 }
 
 .defaultText {
   font-size: 50px;
+  font-weight: bold;
+}
+
+.copyText {
+  font-size: 25px;
   font-weight: bold;
 }
 
@@ -65,7 +71,6 @@ body {
   text-align: center;
   width: 100%;
   z-index: 90;
-  padding-top: 1.6vw;
   font-size: 2.9761vw;
   font-weight: bold;
   position: absolute;

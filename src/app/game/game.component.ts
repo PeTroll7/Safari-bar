@@ -43,6 +43,8 @@ export class GameComponent implements OnInit {
     public dialog: MatDialog
   ) {}
 
+  copied: boolean = false;
+
   gameStarted: boolean = false;
   gameID: string = '';
   myID: number = 0;
@@ -179,6 +181,7 @@ export class GameComponent implements OnInit {
 
         this.logArray.push('tuleň otočil řadu');
         this.logArray.push(gameArray);
+        console.log(gameArray);
 
         break;
       }
@@ -690,6 +693,7 @@ export class GameComponent implements OnInit {
 
   openEndDialog() {
     const dialogRef = this.dialog.open(EndComponent, {
+      height: '80%',
       data: { bar: this.bar, trash: this.trash },
     });
 
@@ -713,6 +717,7 @@ export class GameComponent implements OnInit {
       this.chatScrollDown();
     });
   }
+
   getCard(log: string | Card[], id: number): string {
     let card = log[id] as Card;
     let img = '';
@@ -721,5 +726,10 @@ export class GameComponent implements OnInit {
     else img = '../../assets/imgs/blank.png';
 
     return img;
+  }
+
+  copyURL() {
+    navigator.clipboard.writeText(window.location.href);
+    this.copied = true;
   }
 }
