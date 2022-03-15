@@ -16,7 +16,10 @@
 .input {
   background-color: white;
 }
-
+.loading {
+  margin-top: 15vw;
+  position: fixed;
+}
 .loader {
   border: 1vw solid #f3f3f3;
   border-radius: 50%;
