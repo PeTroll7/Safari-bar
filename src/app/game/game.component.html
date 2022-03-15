@@ -14,7 +14,7 @@
     <div class="copyText">
       zkopírovat odkaz pro připojení do hry<br />
 
-      <div *ngIf="!copied" (click)="copyURL()">
+      <div *ngIf="!copied" (click)="copyURL()" class="click-pointer">
         <span class="fa-stack">
           <i class="fa fa-2x fa-circle"></i>
           <i class="fa fa-copy fa-stack-1x fa-inverse"></i>
@@ -23,7 +23,7 @@
       <i *ngIf="copied" class="fa fa-2x fa-solid fa-check"></i>
     </div>
 
-    <div (click)="openRulesDialog()">
+    <div (click)="openRulesDialog()" class="click-pointer">
       <i class="fa fa-2x fa-solid fa-question-circle"></i>
     </div>
   </div>
@@ -209,7 +209,7 @@
     </div>
   </mat-menu>
 
-  <div class="rules" (click)="openRulesDialog()">
+  <div class="rules click-pointer" (click)="openRulesDialog()">
     <i class="fa fa-2x fa-solid fa-question-circle"></i>
   </div>
 </div>

@@ -52,6 +52,41 @@ export class MenuComponent implements OnInit, AfterViewInit {
         this.createGame();
       }
     });
+
+    /*
+     isMobile: [] | null = null;¨
+     
+    const toMatch = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i,
+    ];
+    toMatch.some((x) => {
+      if (navigator.userAgent.match(x)) {
+        console.log(navigator.userAgent.match(x));
+      }
+    });
+
+    
+
+    document.addEventListener('dblclick', () =>
+      document.documentElement.requestFullscreen().catch(console.log)
+    );
+    window.addEventListener('orientationchange', () => {
+      if (window.orientation == 90) {
+        var event = new MouseEvent('dblclick', {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+        });
+        document.dispatchEvent(event);
+      }
+      console.log(window.orientation);
+    });*/
   }
 
   ngAfterViewInit(): void {

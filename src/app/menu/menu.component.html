@@ -1,16 +1,17 @@
 <div
   fxLayout="column"
-  fxLayoutAlign="center stretch"
-  *ngIf="!loaded; else content"
-  [@fadeout]
+  fxLayoutGap="2.604vw"
+  fxLayoutAlign=" center"
+  class="content"
 >
-  <div class="loading"><mat-spinner [diameter]="700"></mat-spinner></div>
-</div>
+  <div class="title">SAFARI BAR</div>
 
-<ng-template #content>
-  <div fxLayout="column" fxLayoutGap="2.604vw" fxLayoutAlign=" center">
-    <div class="title">SAFARI BAR</div>
-
+  <div
+    fxLayout="column"
+    fxLayoutGap="2.604vw"
+    fxLayoutAlign=" center"
+    *ngIf="loaded; else content"
+  >
     <div class="defaultText">ZADEJ NÁZEV MÍSTNOSTI</div>
 
     <mat-form-field class="input" appearance="fill" id="idInput">
@@ -25,5 +26,13 @@
     <div class="rules" (click)="openRulesDialog()">
       <i class="fa fa-2x fa-solid fa-question-circle"></i>
     </div>
+  </div>
+</div>
+
+<ng-template #content>
+  <!--<div class="loading"><mat-spinner [diameter]="700"></mat-spinner></div>-->
+
+  <div class="loading" [@fadeout]>
+    <div class="loader"></div>
   </div>
 </ng-template>

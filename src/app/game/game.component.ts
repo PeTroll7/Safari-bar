@@ -112,10 +112,10 @@ export class GameComponent implements OnInit {
 
         if (gameArray.length == oldArray.length + 1) {
           this.logArray.push('skunk vstoupil do řady');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         } else {
           this.logArray.push('skunk vysmradil zvířata z řady');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         }
 
         break;
@@ -129,7 +129,7 @@ export class GameComponent implements OnInit {
           gameArray = temp.gameArray;
           this.moveDone = true;
           this.logArray.push('papousek vstoupil do řady');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         }
 
         break;
@@ -143,7 +143,7 @@ export class GameComponent implements OnInit {
           gameArray = temp.gameArray;
           this.moveDone = true;
           this.logArray.push('klokan vstoupil do řady');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         }
 
         break;
@@ -153,10 +153,10 @@ export class GameComponent implements OnInit {
 
         if (gameArray[0]?.id == 4 && gameArray[1]?.id == 4) {
           this.logArray.push('opice vstoupila do řady a předběhla ji');
-          this.logArray.push(gameArray);
-        } else if (gameArray.length == oldArray.length + 1) {
+          this.logArray.push([...gameArray]);
+        } else {
           this.logArray.push('opice vstoupila do řady');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         }
 
         break;
@@ -172,7 +172,7 @@ export class GameComponent implements OnInit {
         }
 
         this.logArray.push('chameleon vstoupil do řady');
-        this.logArray.push(gameArray);
+        this.logArray.push([...gameArray]);
 
         break;
       }
@@ -180,7 +180,7 @@ export class GameComponent implements OnInit {
         gameArray = animals.tulen(gameArray, this.playedCard, true);
 
         this.logArray.push('tuleň otočil řadu');
-        this.logArray.push(gameArray);
+        this.logArray.push([...gameArray]);
         console.log(gameArray);
 
         break;
@@ -189,7 +189,7 @@ export class GameComponent implements OnInit {
         gameArray = animals.zebra(gameArray, this.playedCard);
 
         this.logArray.push('zebra vstoupila do řady');
-        this.logArray.push(gameArray);
+        this.logArray.push([...gameArray]);
 
         break;
       }
@@ -197,7 +197,7 @@ export class GameComponent implements OnInit {
         gameArray = animals.zirafa(gameArray, this.playedCard);
 
         this.logArray.push('žirafa vstoupila do řady');
-        this.logArray.push(gameArray);
+        this.logArray.push([...gameArray]);
 
         break;
       }
@@ -205,7 +205,7 @@ export class GameComponent implements OnInit {
         gameArray = animals.had(gameArray, this.playedCard, true);
 
         this.logArray.push('had seřadil řadu');
-        this.logArray.push(gameArray);
+        this.logArray.push([...gameArray]);
 
         break;
       }
@@ -219,10 +219,10 @@ export class GameComponent implements OnInit {
 
         if (gameArray.length == oldArray.length + 1) {
           this.logArray.push('krokodýl vstoupil do řady');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         } else {
           this.logArray.push('krokodýl snědl slabší zvířata před sebou');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         }
 
         break;
@@ -237,10 +237,10 @@ export class GameComponent implements OnInit {
 
         if (gameArray.length == oldArray.length + 1) {
           this.logArray.push('hroch vstoupil do řady');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         } else {
           this.logArray.push('hroch předběhl slabší zvířata před sebou');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         }
 
         break;
@@ -250,10 +250,10 @@ export class GameComponent implements OnInit {
 
         if (gameArray.length == oldArray.length + 1) {
           this.logArray.push('lev vstoupil na první místo');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         } else {
           this.logArray.push('lev vtoupil do řady, ale byl vyhnán prvním lvem');
-          this.logArray.push(gameArray);
+          this.logArray.push([...gameArray]);
         }
 
         break;
@@ -432,7 +432,7 @@ export class GameComponent implements OnInit {
                 gameArray[i] = temp;
                 zirafaJump = true;
                 this.logArray.push('žirafa předběhla slabší zvíře před sebou');
-                this.logArray.push(gameArray);
+                this.logArray.push([...gameArray]);
               }
               break;
             }
@@ -447,7 +447,7 @@ export class GameComponent implements OnInit {
               if (size - gameArray.length != 0) {
                 i = i - (size - gameArray.length);
                 this.logArray.push('krokodýl sežral slabší zvířata před sebou');
-                this.logArray.push(gameArray);
+                this.logArray.push([...gameArray]);
               }
 
               break;
@@ -456,7 +456,7 @@ export class GameComponent implements OnInit {
               gameArray = animals.hroch(gameArray, gameArray[i], false, i);
               if (gameArray[i] != lastArray[i]) {
                 this.logArray.push('hroch předběhl slabší zvířata před sebou');
-                this.logArray.push(gameArray);
+                this.logArray.push([...gameArray]);
               }
 
               break;
