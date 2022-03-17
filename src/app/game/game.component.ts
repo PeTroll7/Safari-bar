@@ -105,7 +105,7 @@ export class GameComponent implements OnInit {
   clicked(card: Card, arrayId: number, gameArray: Card[]) {
     this.moveDone = false;
     this.playedCard = card;
-    let oldArray = gameArray;
+    let oldArray = [...gameArray];
     switch (this.playedCard.id) {
       case 1: {
         gameArray = animals.skunk(gameArray, this.playedCard, true);
@@ -128,9 +128,10 @@ export class GameComponent implements OnInit {
         } else {
           gameArray = temp.gameArray;
           this.moveDone = true;
-          this.logArray.push('papousek vstoupil do řady');
-          this.logArray.push([...gameArray]);
         }
+
+        this.logArray.push('papousek vstoupil do řady');
+        this.logArray.push([...gameArray]);
 
         break;
       }
@@ -142,9 +143,10 @@ export class GameComponent implements OnInit {
         } else {
           gameArray = temp.gameArray;
           this.moveDone = true;
-          this.logArray.push('klokan vstoupil do řady');
-          this.logArray.push([...gameArray]);
         }
+
+        this.logArray.push('klokan vstoupil do řady');
+        this.logArray.push([...gameArray]);
 
         break;
       }
@@ -181,7 +183,6 @@ export class GameComponent implements OnInit {
 
         this.logArray.push('tuleň otočil řadu');
         this.logArray.push([...gameArray]);
-        console.log(gameArray);
 
         break;
       }
@@ -366,7 +367,7 @@ export class GameComponent implements OnInit {
   }) {
     if (temp.logMessage != '') {
       this.logArray.push(temp.logMessage);
-      this.logArray.push(temp.gameArray);
+      this.logArray.push([...temp.gameArray]);
     }
 
     if (temp.valid) {
@@ -418,7 +419,7 @@ export class GameComponent implements OnInit {
     if (gameArray.length > 1) {
       let zirafaJump = false;
       for (let i = 0; i < gameArray.length; i++) {
-        let lastArray = gameArray;
+        let lastArray = [...gameArray];
         if (this.playedCard !== gameArray[i]) {
           switch (gameArray[i].id) {
             case 8: {

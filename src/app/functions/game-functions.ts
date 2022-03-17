@@ -61,8 +61,7 @@ export function divFunc(
     chameleonCard.id = 0;
     chameleonCard.name = 'papousek';
 
-    if (playedCard.id == 2)
-      temp.logMessage = 'paposek vstoupil do řady a vyhodil zvíře';
+    if (playedCard.id == 2) temp.logMessage = 'paposek vyhodil zvíře';
   } else if (
     (playedCard?.id == 3 && gameArray.length <= buttonId + 3) ||
     (chameleonCard.id === 3 && gameArray.length <= buttonId + 3)
@@ -71,8 +70,7 @@ export function divFunc(
     chameleonCard.id = 0;
     chameleonCard.name = 'klokan';
     valid = true;
-    if (playedCard.id == 3)
-      temp.logMessage = 'klokan vstoupil do řady a přeskočil zvíře';
+    if (playedCard.id == 3) temp.logMessage = 'klokan přeskočil zvíře';
   } else if (playedCard?.id == 5 && chameleonCard.id != 3) {
     temp = animals.chameleonSecond(buttonId, gameArray, playedCard);
     if (temp.isNeed) {

@@ -103,6 +103,5 @@ export class EndComponent implements OnInit {
       this.playerBar3,
       this.playerBar4,
     ];
-    console.log(this.playerArray[this.playerWin]);
   }
 }
