@@ -32,6 +32,21 @@ Pokud je to opět stejné vyhrává hráč, který měl v baru kartu první. <br
 
 <h2>Schopnosti karet</h2>
 
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <div>
+    Karty, které u sebe mají symbol spirály, tak schopnost těchto karet se
+    provede po každém položení karty a provedení její<br />
+    schopnosti. Když je v řadě více zvířat se symbolem spirály, tak opakující se
+    schopnosti se provedou postupně od baru ke<br />
+    konci řady. Příklad: V řadě je krokodýl, krokodýl sní všechna zvířata před
+    sebou a má u sebe spirálu, takže jeho schopnost<br />
+    se opakuje. Když do řady vstoupí klokan a přeskočí krokodýla, tak ho
+    krokodýl ihned sní.
+  </div>
+  <div>
+    <img class="img-show" src="../../assets/imgs/krokodyl1.png" />
+  </div>
+</div>
 <hr />
 <div fxLayout="column" fxLayoutGap="20px" class="test">
   <div *ngFor="let animal of rules">

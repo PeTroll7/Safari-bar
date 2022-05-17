@@ -45,8 +45,8 @@ export class RulesComponent implements OnInit {
       card: 'tulen1',
       rules:
         'tuleň otočí pořadí zvířat v řaďe, takže on bude první, první bude poslední, atd.',
-      show1: ['lev4', 'hroch3', 'zebra2', 'chameleon1'],
-      show2: ['chameleon1', 'zebra2', 'hroch3', 'lev4'],
+      show1: ['lev4', 'hroch3', 'zebra2', 'chameleon1', 'tulen1'],
+      show2: ['tulen1', 'chameleon1', 'zebra2', 'hroch3', 'lev4'],
     },
     {
       card: 'zebra1',
@@ -60,7 +60,7 @@ export class RulesComponent implements OnInit {
       rules:
         'žirafa při vstoupení do řady nic neudělá, ale při každém dalším položení karty, předběhne jednu slabší kartu před sebou',
       show1: ['lev4', 'chameleon3', 'zebra4', 'zirafa1'],
-      show2: ['lev4', 'chameleon3', 'zirafa1', 'zebra2', 'zebra2'],
+      show2: ['lev4', 'chameleon3', 'zirafa1', 'zebra4', 'zebra2'],
     },
     {
       card: 'had1',
