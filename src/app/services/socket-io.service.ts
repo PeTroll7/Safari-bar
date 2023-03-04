@@ -13,7 +13,7 @@ export class SocketIoService {
   constructor() {}
 
   connect() {
-    this.socket = io('https://safri-bar-server.herokuapp.com');
+    this.socket = io('safari-bar.up.railway.app');   //https://safri-bar-server.herokuapp.com
   }
 
   connectToRoom(gameID: string) {
